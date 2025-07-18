@@ -1,0 +1,35 @@
+
+export default {
+  title: 'Логгирование действий',
+  description: 'Журнал всех действий пользователей в системе',
+  timestamp: 'Время',
+  action: 'Действие',
+  studyUid: 'UID исследования',
+  patientId: 'ID пациента',
+  details: 'Детали',
+  filters: 'Фильтры',
+  filtersTitle: 'Фильтры логирования',
+  dateFrom: 'Дата с',
+  dateTo: 'Дата по',
+  apply: 'Применить',
+  reset: 'Сбросить',
+  show: 'Показать',
+  resetFilters: 'Сбросить фильтры',
+  generateReport: 'Сформировать отчет',
+  reportGenerated: 'Отчет сформирован',
+  reportDescription: 'Создан отчет по {count} записям логирования',
+  logEntries: 'записей',
+  logEntriesCount: 'Журнал действий ({count})',
+  actions: {
+    all: 'Все действия',
+    statusChange: 'Изменение статуса исследования',
+    addComment: 'Добавление комментария',
+    sendConsultation: 'Направление на консультацию',
+    cancelConsultation: 'Отмена консультации',
+    createReport: 'Создание отчета',
+    deleteStudy: 'Удаление исследования',
+    updatePatient: 'Обновление данных пациента'
+  },
+  statusChangeDetails: 'Статус изменен с "{oldStatus}" на "{newStatus}"',
+  actionPerformed: 'Выполнено действие: {action}'
+};
