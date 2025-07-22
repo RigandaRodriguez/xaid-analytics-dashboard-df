@@ -70,7 +70,7 @@ export interface ApiStudyFilters {
   patient_name?: string;
   study_created_at__gte?: string;
   study_created_at__lte?: string;
-  status?: string;
+  status?: import('@/types/api').ProcessingStatus;
   pathology_keys?: string[];
 }
 

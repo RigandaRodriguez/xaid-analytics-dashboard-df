@@ -20,7 +20,7 @@ const ErrorDisplay: React.FC<ErrorDisplayProps> = ({
 }) => {
   if (!error) return null;
 
-  const errorMessage = 'message' in error ? error.message : error.toString();
+  const errorMessage = 'message' in error ? error.message : String(error);
   const errorStatus = 'status' in error ? error.status : undefined;
 
   return (

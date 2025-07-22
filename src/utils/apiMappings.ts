@@ -99,6 +99,7 @@ export function mapProcessingPathologyToPathologyState(
   pathologyText: string
 ): PathologyState {
   return {
+    id: pathology.pathology_key,
     status: mapRecommendationStatusToPathologyStatus(pathology.recommendation_status),
     originalText: pathologyText,
     editedText: pathologyText,

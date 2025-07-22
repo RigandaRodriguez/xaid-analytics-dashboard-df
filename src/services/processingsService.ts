@@ -38,9 +38,13 @@ export class ProcessingsService {
 
     // Handle pathology_keys in request body if provided
     if (params.pathology_keys) {
-      return apiClient.post<ListProcessingsResponse>('/processings/', params.pathology_keys, {
-        params: queryParams,
+      const url = new URL('/processings/', 'http://localhost');
+      Object.entries(queryParams).forEach(([key, value]) => {
+        if (value !== null && value !== undefined) {
+          url.searchParams.append(key, String(value));
+        }
       });
+      return apiClient.post<ListProcessingsResponse>(url.pathname + url.search, params.pathology_keys);
     }
 
     return apiClient.get<ListProcessingsResponse>('/processings/', queryParams);

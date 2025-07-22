@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { Study, StudyFilters, ApiStudyFilters } from '@/types/study';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useProcessings } from '@/hooks/api/useProcessings';
+import { ProcessingStatus } from '@/types/api';
 import { useStudySort } from '@/hooks/useStudySort';
 import { useStudyPagination } from '@/hooks/useStudyPagination';
 
@@ -73,7 +74,14 @@ export const useStudyDashboardStateApi = () => {
     }
 
     if (currentFilters.status && currentFilters.status !== '') {
-      apiParams.status = currentFilters.status;
+      // Map UI status values to API ProcessingStatus
+      const statusMapping: Record<string, ProcessingStatus> = {
+        'completed': 'success',
+        'processing': 'processing',
+        'processing_error': 'processing_error',
+        'data_error': 'processing_error'
+      };
+      apiParams.status = statusMapping[currentFilters.status] || currentFilters.status as ProcessingStatus;
     }
 
     if (currentFilters.pathologyKeys && currentFilters.pathologyKeys.length > 0) {
