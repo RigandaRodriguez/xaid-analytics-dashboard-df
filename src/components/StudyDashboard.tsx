@@ -8,8 +8,10 @@ import StudyPagination from '@/components/StudyPagination';
 import StatisticsGraph from '@/components/StatisticsGraph';
 import StudyFiltersCard from '@/components/StudyFiltersCard';
 import StudyTableCard from '@/components/StudyTableCard';
+import LoadingSpinner from '@/components/LoadingSpinner';
+import ErrorDisplay from '@/components/ErrorDisplay';
 import { Study } from '@/types/study';
-import { useStudyDashboardState } from '@/hooks/useStudyDashboardState';
+import { useStudyDashboardStateApi } from '@/hooks/useStudyDashboardStateApi';
 import { useUndoActions } from '@/hooks/useUndoActions';
 import { useStudyBulkActions } from '@/hooks/useStudyBulkActions';
 import { useLanguage } from '@/contexts/LanguageContext';
@@ -28,7 +30,6 @@ const StudyDashboard = ({ onAddToReport }: StudyDashboardProps) => {
     selectedStudies,
     setSelectedStudies,
     studies,
-    setStudies,
     appliedFilters,
     appliedFilteredStudies,
     filters,
@@ -37,6 +38,9 @@ const StudyDashboard = ({ onAddToReport }: StudyDashboardProps) => {
     sortConfig,
     paginationConfig,
     paginationData,
+    isLoading,
+    error,
+    refetch,
     handleApplyFilters,
     handleResetFiltersWithApplied,
     handleSelectStudy,
@@ -46,7 +50,7 @@ const StudyDashboard = ({ onAddToReport }: StudyDashboardProps) => {
     handlePageChange,
     handleRecordsPerPageChange,
     handleViewModeChange
-  } = useStudyDashboardState();
+  } = useStudyDashboardStateApi();
 
   const { undoAction, showUndoPanel, handleUndo, handleDismiss } = useUndoActions();
 
@@ -56,7 +60,7 @@ const StudyDashboard = ({ onAddToReport }: StudyDashboardProps) => {
     handleAddToReport: originalHandleAddToReport
   } = useStudyBulkActions(
     studies,
-    setStudies,
+    () => refetch(), // Use refetch instead of setStudies
     selectedStudies,
     setSelectedStudies,
     showUndoPanel
@@ -76,6 +80,19 @@ const StudyDashboard = ({ onAddToReport }: StudyDashboardProps) => {
   const handleGoToReports = () => {
     navigate('/reports');
   };
+
+  if (error) {
+    return (
+      <div className="space-y-6 pb-20">
+        <ErrorDisplay 
+          error={error} 
+          onRetry={() => refetch()}
+          title={t('messages.loadingError')}
+          className="mx-auto max-w-2xl"
+        />
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6 pb-20">
@@ -110,16 +127,22 @@ const StudyDashboard = ({ onAddToReport }: StudyDashboardProps) => {
         endRecord={paginationData.endRecord}
       />
 
-      <StudyTableCard
-        studies={paginationData.currentPageStudies}
-        selectedStudies={selectedStudies}
-        onSelectStudy={handleSelectStudy}
-        onSelectAll={handleSelectAll}
-        onViewReport={handleViewReport}
-        viewMode={paginationConfig.viewMode}
-        currentPage={paginationConfig.currentPage}
-        totalPages={paginationData.totalPages}
-      />
+      {isLoading ? (
+        <div className="flex justify-center items-center py-12">
+          <LoadingSpinner size="lg" text={t('messages.loadingStudies')} />
+        </div>
+      ) : (
+        <StudyTableCard
+          studies={paginationData.currentPageStudies}
+          selectedStudies={selectedStudies}
+          onSelectStudy={handleSelectStudy}
+          onSelectAll={handleSelectAll}
+          onViewReport={handleViewReport}
+          viewMode={paginationConfig.viewMode}
+          currentPage={paginationConfig.currentPage}
+          totalPages={paginationData.totalPages}
+        />
+      )}
 
       {paginationData.totalPages > 1 && (
         <StudyPagination
