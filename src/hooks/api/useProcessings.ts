@@ -1,7 +1,7 @@
 
 import { useQuery } from '@tanstack/react-query';
 import { processingsService } from '@/services/processingsService';
-import { ProcessingsListParams } from '@/types/api';
+import { ProcessingsListParams, ProcessingPathology } from '@/types/api';
 import { mapProcessingToStudy } from '@/utils/apiMappings';
 import { Study } from '@/types/study';
 
@@ -17,11 +17,22 @@ export function useProcessings(options: UseProcessingsOptions = {}) {
     queryFn: async () => {
       const response = await processingsService.listProcessings(params);
       
-      // Map API data to UI format
-      const studies: Study[] = response.items.map(mapProcessingToStudy);
+      // Загружаем патологии для каждого исследования
+      const studiesWithPathologies = await Promise.all(
+        response.items.map(async (processing) => {
+          try {
+            const pathologies = await processingsService.getProcessingPathologies(processing.uid);
+            return mapProcessingToStudy(processing, pathologies);
+          } catch (error) {
+            // Если не удалось загрузить патологии, возвращаем исследование без них
+            console.warn(`Failed to load pathologies for processing ${processing.uid}:`, error);
+            return mapProcessingToStudy(processing);
+          }
+        })
+      );
       
       return {
-        studies,
+        studies: studiesWithPathologies,
         pagination: {
           page: response.page,
           perPage: response.per_page,

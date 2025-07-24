@@ -2,21 +2,23 @@
 import { Processing, ProcessingPathology, ProcessingStatus, RecommendationStatus } from '@/types/api';
 import { Study, PathologyDecision } from '@/types/study';
 import { PathologyState, PathologyStatus } from '@/types/pathology';
+import { getDisplayPathologyNames, getApiRecommendedPhysicians } from '@/utils/pathologyDisplayHelpers';
 
 /**
  * Map API Processing to UI Study
  */
-export function mapProcessingToStudy(processing: Processing): Study {
+export function mapProcessingToStudy(processing: Processing, pathologies?: ProcessingPathology[]): Study {
   return {
     uid: processing.uid,
     patientId: processing.patient_id,
     patientName: processing.patient_name,
     date: new Date(processing.study_created_at),
     status: mapProcessingStatusToStudyStatus(processing.status),
-    pathology: [], // Will be populated separately from pathologies endpoint
+    pathology: pathologies ? getDisplayPathologyNames(pathologies) : [],
     descriptionStatus: processing.status === 'success' ? 'completed' : 'in_progress',
     statusKey: processing.status,
     pathologyKey: undefined, // Will be set when pathologies are loaded
+    doctorRecommendations: pathologies ? getApiRecommendedPhysicians(pathologies) : [],
   };
 }
 
