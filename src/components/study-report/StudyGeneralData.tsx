@@ -12,12 +12,39 @@ interface StudyGeneralDataProps {
   study: Study;
   allPathologiesDecided: boolean;
   descriptionStatus?: 'in_progress' | 'completed';
+  pathologyStates?: Record<string, any>; // Add pathology states to determine rejection status
 }
 
-const StudyGeneralData: React.FC<StudyGeneralDataProps> = ({ study, allPathologiesDecided, descriptionStatus }) => {
+const StudyGeneralData: React.FC<StudyGeneralDataProps> = ({ 
+  study, 
+  allPathologiesDecided, 
+  descriptionStatus, 
+  pathologyStates 
+}) => {
   const { t, language } = useLanguage();
   const isProcessing = study.status === 'processing';
   const isError = study.status === 'processing_error' || study.status === 'data_error';
+  
+  // Determine the diagnosis status based on pathology states
+  const getDiagnosisStatus = () => {
+    if (!allPathologiesDecided) {
+      return t('studyReport.notReviewed');
+    }
+    
+    if (pathologyStates) {
+      const pathologyValues = Object.values(pathologyStates);
+      const allRejected = pathologyValues.every((state: any) => state.status === 'rejected');
+      const someAccepted = pathologyValues.some((state: any) => state.status === 'accepted');
+      
+      if (allRejected) {
+        return t('studyReport.pathologyStatuses.rejected');
+      } else if (someAccepted) {
+        return t('studyReport.diagnosisConfirmed');
+      }
+    }
+    
+    return t('studyReport.diagnosisConfirmed');
+  };
   
   // Get doctor recommendations based on pathology
   const doctorRecommendations = study.doctorRecommendations || getDoctorRecommendations(study.pathology);
@@ -72,7 +99,7 @@ const StudyGeneralData: React.FC<StudyGeneralDataProps> = ({ study, allPathologi
           </div>
           <div>
             <label className="text-sm font-medium text-gray-500">{t('studyReport.diagnosisConfirmed')}</label>
-            <p>{allPathologiesDecided ? t('studyReport.diagnosisConfirmed') : t('studyReport.notReviewed')}</p>
+            <p>{getDiagnosisStatus()}</p>
           </div>
           <div>
             <label className="text-sm font-medium text-gray-500">{t('study.recommendations')}</label>

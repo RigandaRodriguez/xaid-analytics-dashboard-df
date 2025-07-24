@@ -1,5 +1,6 @@
 import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { useQueryClient } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, AlertCircle } from 'lucide-react';
 
@@ -18,6 +19,7 @@ import StudyActionsCard from './study-report/StudyActionsCard';
 const StudyReport = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   
   console.log('StudyReport: About to use language context');
   const { t } = useLanguage();
@@ -63,7 +65,12 @@ const StudyReport = () => {
         <div className="mb-6">
           <Button
             variant="outline"
-            onClick={() => navigate('/')}
+            onClick={() => {
+              // Invalidate queries to refresh dashboard data
+              queryClient.invalidateQueries({ queryKey: ['processings'] });
+              queryClient.invalidateQueries({ queryKey: ['processing-pathologies'] });
+              navigate('/');
+            }}
             className="mb-4"
           >
             <ArrowLeft className="w-4 h-4 mr-2" />
@@ -86,7 +93,12 @@ const StudyReport = () => {
             </div>
           )}
 
-          <StudyGeneralData study={study} allPathologiesDecided={pathologyManagement.allPathologiesDecided} descriptionStatus={descriptionStatus} />
+          <StudyGeneralData 
+            study={study} 
+            allPathologiesDecided={pathologyManagement.allPathologiesDecided} 
+            descriptionStatus={descriptionStatus}
+            pathologyStates={pathologyManagement.pathologyStates}
+          />
 
           {clinicalRecommendation && !isProcessing && !isError && (
             <ClinicalRecommendationsCard clinicalRecommendation={clinicalRecommendation} />

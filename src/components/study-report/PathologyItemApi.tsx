@@ -46,8 +46,10 @@ const PathologyItemApi: React.FC<PathologyItemApiProps> = ({
   // Get translated pathology name
   const translatedPathology = getPathologyDisplayName(pathology.pathology_key);
   
-  // Get physician recommendation
-  const physicianRecommendation = getPhysicianDisplayName(pathology.recommendation_physician_key);
+  // Get physician recommendation - use direct name from API if it doesn't match config
+  const physicianRecommendation = getPhysicianDisplayName(pathology.recommendation_physician_key) === pathology.recommendation_physician_key 
+    ? pathology.recommendation_physician_key // Use API name directly if no config found
+    : getPhysicianDisplayName(pathology.recommendation_physician_key);
 
   return (
     <div className="border rounded-lg p-4">
