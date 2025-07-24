@@ -91,8 +91,8 @@ const PathologyItemApi: React.FC<PathologyItemApiProps> = ({
           <Button 
             onClick={() => onAction(pathology.pathology_key, 'accept')}
             size="sm"
-            className="bg-green-600 hover:bg-green-700"
             variant={state.status === 'accepted' ? 'default' : 'outline'}
+            className={state.status === 'accepted' ? 'bg-green-600 hover:bg-green-700 text-white' : ''}
           >
             {t('studyReport.pathologyActions.accept')}
           </Button>

@@ -132,7 +132,7 @@ const PathologiesCardApi: React.FC<PathologiesCardApiProps> = ({
             disabled={isSubmitting}
             className="ml-auto"
           >
-            {isSubmitting ? 'Сохранение...' : 'Сохранить изменения'}
+            {isSubmitting ? 'Сохранение...' : 'Завершить описание'}
           </Button>
         )}
       </CardHeader>
