@@ -97,6 +97,7 @@ const StudyReport = () => {
             canConfirmDiagnosis={canConfirmDiagnosis}
             descriptionStatus={descriptionStatus}
             onDescriptionStatusToggle={handleDescriptionStatusToggle}
+            pathologyManagement={pathologyManagement}
           />
 
           <StudyActionsCard

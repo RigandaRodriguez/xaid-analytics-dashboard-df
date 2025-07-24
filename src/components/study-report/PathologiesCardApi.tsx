@@ -13,13 +13,15 @@ interface PathologiesCardApiProps {
   canConfirmDiagnosis: boolean;
   descriptionStatus: 'in_progress' | 'completed';
   onDescriptionStatusToggle: () => void;
+  pathologyManagement: ReturnType<typeof usePathologyManagementApi>;
 }
 
 const PathologiesCardApi: React.FC<PathologiesCardApiProps> = ({
   study,
   canConfirmDiagnosis,
   descriptionStatus,
-  onDescriptionStatusToggle
+  onDescriptionStatusToggle,
+  pathologyManagement
 }) => {
   const { t } = useLanguage();
   
@@ -33,7 +35,7 @@ const PathologiesCardApi: React.FC<PathologiesCardApiProps> = ({
     allPathologiesDecided,
     getPhysicianName,
     isSubmitting
-  } = usePathologyManagementApi(study.uid);
+  } = pathologyManagement;
 
   const isError = study.status === 'processing_error' || study.status === 'data_error';
   const isProcessing = study.status === 'processing';
