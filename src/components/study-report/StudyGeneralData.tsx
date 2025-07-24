@@ -104,13 +104,13 @@ const StudyGeneralData: React.FC<StudyGeneralDataProps> = ({
           <div>
             <label className="text-sm font-medium text-gray-500">{t('study.recommendations')}</label>
             <div className="flex flex-wrap gap-1 mt-1">
-              {doctorRecommendations.length > 0 ? (
+                  {doctorRecommendations.length > 0 ? (
                 doctorRecommendations.map((recommendation, index) => (
                   <span
                     key={index}
                     className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${getDoctorBadgeClass(recommendation)}`}
                   >
-                    {t(`study.${recommendation.toLowerCase().replace(/\s+/g, '_')}`)}
+                    {t(`study.doctors.${recommendation}`) !== `study.doctors.${recommendation}` ? t(`study.doctors.${recommendation}`) : recommendation}
                   </span>
                 ))
               ) : (
