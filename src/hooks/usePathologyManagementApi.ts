@@ -23,6 +23,8 @@ export const usePathologyManagementApi = (uid: string) => {
   }, [pathologyData]);
 
   const handlePathologyAction = (pathologyId: string, action: 'accept' | 'reject') => {
+    console.log(`Pathology action: ${action} for ${pathologyId}`);
+    
     setPathologyStates(prev => {
       const current = prev[pathologyId];
       
@@ -30,12 +32,7 @@ export const usePathologyManagementApi = (uid: string) => {
       
       const newStatus: PathologyStatus = action === 'accept' ? 'accepted' : 'rejected';
       
-      toast({
-        title: t(`studyReport.pathologyActions.${action}`),
-        description: action === 'accept' ? 'Диагноз принят' : 'Диагноз отклонен'
-      });
-      
-      return {
+      const newState = {
         ...prev,
         [pathologyId]: {
           ...current,
@@ -43,21 +40,38 @@ export const usePathologyManagementApi = (uid: string) => {
           timestamp: new Date()
         }
       };
+      
+      console.log('Updated pathology states:', newState);
+      
+      toast({
+        title: t(`studyReport.pathologyActions.${action}`),
+        description: action === 'accept' ? 'Диагноз принят' : 'Диагноз отклонен'
+      });
+      
+      return newState;
     });
   };
 
   const submitPathologyDecisions = async () => {
     if (!pathologyData?.pathologies) return;
 
-    const pathologyUpdates: PathologyUpdate[] = pathologyData.pathologies.map(pathology => ({
-      pathology_key: pathology.pathology_key,
-      recommendation_status: pathologyStates[pathology.pathology_key]?.status === 'accepted' ? 'accepted' : 'rejected'
-    }));
+    const pathologyUpdates: PathologyUpdate[] = pathologyData.pathologies.map(pathology => {
+      const localState = pathologyStates[pathology.pathology_key];
+      const recommendationStatus = localState?.status === 'accepted' ? 'accepted' : 
+                                   localState?.status === 'rejected' ? 'rejected' : 
+                                   pathology.recommendation_status; // fallback to current API status
+      
+      return {
+        pathology_key: pathology.pathology_key,
+        recommendation_status: recommendationStatus
+      };
+    });
 
     const requestData: UpdateProcessingPathologiesRequest = {
       pathologies: pathologyUpdates
     };
 
+    console.log('Submitting pathology decisions:', requestData);
     await updatePathologiesMutation.mutateAsync({ uid, data: requestData });
   };
 
