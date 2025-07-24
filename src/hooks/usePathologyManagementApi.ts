@@ -13,23 +13,31 @@ export const usePathologyManagementApi = (uid: string) => {
   const { data: pathologyData, isLoading, error } = useProcessingPathologies(uid);
   const updatePathologiesMutation = useUpdateProcessingPathologies();
   
+  
   const [pathologyStates, setPathologyStates] = useState<Record<string, PathologyState>>({});
+  const [isInitialized, setIsInitialized] = useState(false);
 
   // Initialize states from API data only once
   useEffect(() => {
-    if (pathologyData?.pathologyStates && Object.keys(pathologyStates).length === 0) {
-      console.log('Initializing pathology states from API:', pathologyData.pathologyStates);
+    if (pathologyData?.pathologyStates && !isInitialized) {
+      console.log('INITIALIZING pathology states from API:', pathologyData.pathologyStates);
       setPathologyStates(pathologyData.pathologyStates);
+      setIsInitialized(true);
     }
-  }, [pathologyData, pathologyStates]);
+  }, [pathologyData, isInitialized]);
 
   const handlePathologyAction = (pathologyId: string, action: 'accept' | 'reject') => {
-    console.log(`Pathology action: ${action} for ${pathologyId}`);
+    console.log(`=== PATHOLOGY ACTION START ===`);
+    console.log(`Action: ${action} for ${pathologyId}`);
+    console.log(`Current pathologyStates before action:`, pathologyStates);
     
     setPathologyStates(prev => {
       const current = prev[pathologyId];
       
-      if (!current) return prev;
+      if (!current) {
+        console.log(`ERROR: No current state found for ${pathologyId}`);
+        return prev;
+      }
       
       const newStatus: PathologyStatus = action === 'accept' ? 'accepted' : 'rejected';
       
@@ -42,7 +50,8 @@ export const usePathologyManagementApi = (uid: string) => {
         }
       };
       
-      console.log('Updated pathology states:', newState);
+      console.log('NEW pathology states after action:', newState);
+      console.log(`=== PATHOLOGY ACTION END ===`);
       
       toast({
         title: t(`studyReport.pathologyActions.${action}`),
@@ -54,17 +63,27 @@ export const usePathologyManagementApi = (uid: string) => {
   };
 
   const submitPathologyDecisions = async () => {
-    if (!pathologyData?.pathologies) return;
-
-    console.log('Current pathologyStates before submit:', pathologyStates);
+    console.log(`=== SUBMIT PATHOLOGY DECISIONS START ===`);
+    console.log('pathologyData?.pathologies:', pathologyData?.pathologies);
+    console.log('Current pathologyStates in submit:', pathologyStates);
+    
+    if (!pathologyData?.pathologies) {
+      console.log('ERROR: No pathologyData.pathologies found');
+      return;
+    }
 
     const pathologyUpdates: PathologyUpdate[] = pathologyData.pathologies.map(pathology => {
       const localState = pathologyStates[pathology.pathology_key];
+      console.log(`Processing ${pathology.pathology_key}:`);
+      console.log(`  - localState:`, localState);
+      console.log(`  - localState.status:`, localState?.status);
+      console.log(`  - API status:`, pathology.recommendation_status);
+      
       const recommendationStatus = localState?.status === 'accepted' ? 'accepted' : 
                                    localState?.status === 'rejected' ? 'rejected' : 
                                    pathology.recommendation_status; // fallback to current API status
       
-      console.log(`Pathology ${pathology.pathology_key}: localState=${localState?.status}, sending=${recommendationStatus}`);
+      console.log(`  - Final status to send:`, recommendationStatus);
       
       return {
         pathology_key: pathology.pathology_key,
@@ -76,7 +95,9 @@ export const usePathologyManagementApi = (uid: string) => {
       pathologies: pathologyUpdates
     };
 
-    console.log('Submitting pathology decisions:', requestData);
+    console.log('FINAL REQUEST DATA:', requestData);
+    console.log(`=== SUBMIT PATHOLOGY DECISIONS END ===`);
+    
     await updatePathologiesMutation.mutateAsync({ uid, data: requestData });
   };
 
