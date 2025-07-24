@@ -11,6 +11,7 @@ import ui from './ui';
 import pathologies from './pathologies';
 import referenceValues from './referenceValues';
 import clinicalRecommendations from './clinicalRecommendations';
+import physicians from './physicians';
 
 export default {
   navigation,
@@ -32,6 +33,7 @@ export default {
   doctors: common.doctors,
   radiologists: common.radiologists,
   studyReport,
+  physicians,
   specialties: common.specialties,
   statistics: ui.statistics,
   displaySettings: ui.displaySettings,

@@ -5,13 +5,12 @@ import { ArrowLeft, AlertCircle } from 'lucide-react';
 
 import { useLanguage } from '@/contexts/LanguageContext';
 import { getClinicalRecommendation } from '@/utils/studyMockData';
-import { usePathologyManagement } from '@/hooks/usePathologyManagement';
-import { useRecommendations } from '@/hooks/useRecommendations';
+import { usePathologyManagementApi } from '@/hooks/usePathologyManagementApi';
 
 import { useStudyActions } from '@/hooks/useStudyActions';
 import StudyGeneralData from './study-report/StudyGeneralData';
 import ClinicalRecommendationsCard from './study-report/ClinicalRecommendationsCard';
-import PathologiesCard from './study-report/PathologiesCard';
+import PathologiesCardApi from './study-report/PathologiesCardApi';
 
 
 import StudyActionsCard from './study-report/StudyActionsCard';
@@ -28,18 +27,8 @@ const StudyReport = () => {
   // State for description status
   const [descriptionStatus, setDescriptionStatus] = React.useState(study?.descriptionStatus || 'in_progress');
 
-  // Custom hooks for state management
-  const {
-    pathologyStates,
-    handlePathologyAction,
-    handlePathologyTextChange,
-    allPathologiesDecided
-  } = usePathologyManagement(study?.pathology || '');
-
-  const {
-    recommendations,
-    handleRecommendationChange
-  } = useRecommendations(study?.pathology);
+  // API-based pathology management
+  const pathologyManagement = usePathologyManagementApi(study?.uid || '');
 
 
   const {
@@ -92,22 +81,17 @@ const StudyReport = () => {
             </div>
           )}
 
-          <StudyGeneralData study={study} allPathologiesDecided={allPathologiesDecided} descriptionStatus={descriptionStatus} />
+          <StudyGeneralData study={study} allPathologiesDecided={pathologyManagement.allPathologiesDecided} descriptionStatus={descriptionStatus} />
 
           {clinicalRecommendation && !isProcessing && !isError && (
             <ClinicalRecommendationsCard clinicalRecommendation={clinicalRecommendation} />
           )}
 
-          <PathologiesCard
+          <PathologiesCardApi
             study={study}
-            pathologyStates={pathologyStates}
-            recommendations={recommendations}
             canConfirmDiagnosis={canConfirmDiagnosis}
-            allPathologiesDecided={allPathologiesDecided}
             descriptionStatus={descriptionStatus}
-            onPathologyAction={handlePathologyAction}
-            onPathologyTextChange={handlePathologyTextChange}
-            onRecommendationChange={handleRecommendationChange}
+            onDescriptionStatusToggle={handleDescriptionStatusToggle}
           />
 
           <StudyActionsCard
@@ -115,7 +99,7 @@ const StudyReport = () => {
             isAddedToReport={isAddedToReport}
             onAddToReport={handleAddToReport}
             canConfirmDiagnosis={canConfirmDiagnosis}
-            allPathologiesDecided={allPathologiesDecided}
+            allPathologiesDecided={pathologyManagement.allPathologiesDecided}
             descriptionStatus={descriptionStatus}
             onDescriptionStatusToggle={handleDescriptionStatusToggle}
             onGoToReports={() => navigate('/reports')}

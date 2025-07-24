@@ -7,6 +7,7 @@ import {
   CreateProcessingRequest,
   UpdateProcessingRequest,
   UpdateProcessingPathologyRequest,
+  UpdateProcessingPathologiesRequest,
   GenerateProcessingsReportRequest,
   ProcessingsListParams,
 } from '@/types/api';
@@ -74,6 +75,19 @@ export class ProcessingsService {
   ): Promise<ProcessingPathology> {
     return apiClient.put<ProcessingPathology>(
       `/processings/${uid}/pathologies/${pathologyKey}`,
+      data
+    );
+  }
+
+  /**
+   * Batch update processing transaction pathologies
+   */
+  async updateProcessingPathologies(
+    uid: string,
+    data: UpdateProcessingPathologiesRequest
+  ): Promise<ProcessingPathology[]> {
+    return apiClient.put<ProcessingPathology[]>(
+      `/processings/${uid}/pathologies`,
       data
     );
   }

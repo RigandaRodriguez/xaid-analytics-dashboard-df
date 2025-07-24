@@ -18,6 +18,15 @@ export interface UpdateProcessingPathologyRequest {
   recommendation_status: RecommendationStatus;
 }
 
+export interface PathologyUpdate {
+  pathology_key: string;
+  recommendation_status: RecommendationStatus;
+}
+
+export interface UpdateProcessingPathologiesRequest {
+  pathologies: PathologyUpdate[];
+}
+
 export interface GenerateProcessingsReportRequest {
   processing_uids: string[];
 }
