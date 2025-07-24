@@ -15,12 +15,13 @@ export const usePathologyManagementApi = (uid: string) => {
   
   const [pathologyStates, setPathologyStates] = useState<Record<string, PathologyState>>({});
 
-  // Initialize states from API data
+  // Initialize states from API data only once
   useEffect(() => {
-    if (pathologyData?.pathologyStates) {
+    if (pathologyData?.pathologyStates && Object.keys(pathologyStates).length === 0) {
+      console.log('Initializing pathology states from API:', pathologyData.pathologyStates);
       setPathologyStates(pathologyData.pathologyStates);
     }
-  }, [pathologyData]);
+  }, [pathologyData, pathologyStates]);
 
   const handlePathologyAction = (pathologyId: string, action: 'accept' | 'reject') => {
     console.log(`Pathology action: ${action} for ${pathologyId}`);
@@ -55,11 +56,15 @@ export const usePathologyManagementApi = (uid: string) => {
   const submitPathologyDecisions = async () => {
     if (!pathologyData?.pathologies) return;
 
+    console.log('Current pathologyStates before submit:', pathologyStates);
+
     const pathologyUpdates: PathologyUpdate[] = pathologyData.pathologies.map(pathology => {
       const localState = pathologyStates[pathology.pathology_key];
       const recommendationStatus = localState?.status === 'accepted' ? 'accepted' : 
                                    localState?.status === 'rejected' ? 'rejected' : 
                                    pathology.recommendation_status; // fallback to current API status
+      
+      console.log(`Pathology ${pathology.pathology_key}: localState=${localState?.status}, sending=${recommendationStatus}`);
       
       return {
         pathology_key: pathology.pathology_key,
