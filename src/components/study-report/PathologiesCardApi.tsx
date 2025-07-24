@@ -160,6 +160,16 @@ const PathologiesCardApi: React.FC<PathologiesCardApiProps> = ({
               </AlertDescription>
             </Alert>
           )}
+          
+          {allPathologiesDecided && pathologies.length > 0 && canConfirmDiagnosis && !isDescriptionCompleted && (
+            <Button 
+              onClick={handleCompleteDescription}
+              disabled={isSubmitting}
+              className="w-full mt-4"
+            >
+              {isSubmitting ? 'Сохранение...' : t('studyReport.completeDescription')}
+            </Button>
+          )}
         </div>
       </CardContent>
     </Card>

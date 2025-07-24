@@ -6,7 +6,8 @@ import { ru } from 'date-fns/locale';
 import { PathologyState, PathologyStatus } from '@/types/pathology';
 import { ProcessingPathology } from '@/types/api';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { getTranslatedPathology } from '@/utils/translationHelpers';
+import { getPathologyDisplayName } from '@/config/pathologyConfig';
+import { getPhysicianDisplayName } from '@/config/physicianConfig';
 
 interface PathologyItemApiProps {
   pathology: ProcessingPathology;
@@ -43,10 +44,10 @@ const PathologyItemApi: React.FC<PathologyItemApiProps> = ({
   };
 
   // Get translated pathology name
-  const translatedPathology = getTranslatedPathology(pathology.pathology_key, t);
+  const translatedPathology = getPathologyDisplayName(pathology.pathology_key);
   
   // Get physician recommendation
-  const physicianRecommendation = getPhysicianName(pathology.recommendation_physician_key);
+  const physicianRecommendation = getPhysicianDisplayName(pathology.recommendation_physician_key);
 
   return (
     <div className="border rounded-lg p-4">

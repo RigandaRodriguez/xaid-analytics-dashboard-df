@@ -66,9 +66,7 @@ export const usePathologyManagementApi = (uid: string) => {
   );
 
   const getPhysicianName = (physicianKey: string): string => {
-    const translationKey = `physicians.${physicianKey}`;
-    const translated = t(translationKey);
-    return translated !== translationKey ? translated : physicianKey;
+    return physicianKey; // Будет заменено в компоненте через getPhysicianDisplayName
   };
 
   return {
