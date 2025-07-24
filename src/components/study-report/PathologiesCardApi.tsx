@@ -124,17 +124,8 @@ const PathologiesCardApi: React.FC<PathologiesCardApiProps> = ({
 
   return (
     <Card>
-      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
+      <CardHeader>
         <CardTitle>{t('studyReport.pathologies')}</CardTitle>
-        {canConfirmDiagnosis && !isDescriptionCompleted && allPathologiesDecided && (
-          <Button
-            onClick={handleCompleteDescription}
-            disabled={isSubmitting}
-            className="ml-auto"
-          >
-            {isSubmitting ? 'Сохранение...' : 'Завершить описание'}
-          </Button>
-        )}
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
