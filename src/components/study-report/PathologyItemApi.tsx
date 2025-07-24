@@ -86,19 +86,20 @@ const PathologyItemApi: React.FC<PathologyItemApiProps> = ({
       </div>
 
       {/* Action Buttons */}
-      {canConfirmDiagnosis && !isDescriptionCompleted && state.status === 'pending' && (
+      {canConfirmDiagnosis && !isDescriptionCompleted && (
         <div className="flex gap-2 mt-4">
           <Button 
             onClick={() => onAction(pathology.pathology_key, 'accept')}
             size="sm"
             className="bg-green-600 hover:bg-green-700"
+            variant={state.status === 'accepted' ? 'default' : 'outline'}
           >
             {t('studyReport.pathologyActions.accept')}
           </Button>
           <Button 
             onClick={() => onAction(pathology.pathology_key, 'reject')}
             size="sm"
-            variant="destructive"
+            variant={state.status === 'rejected' ? 'destructive' : 'outline'}
           >
             {t('studyReport.pathologyActions.reject')}
           </Button>
