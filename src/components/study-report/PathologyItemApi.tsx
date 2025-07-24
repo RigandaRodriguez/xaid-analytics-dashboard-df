@@ -53,9 +53,9 @@ const PathologyItemApi: React.FC<PathologyItemApiProps> = ({
       {/* Status Header */}
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
-          {getStatusIcon(isDescriptionCompleted ? 'accepted' : state.status)}
+          {getStatusIcon(state.status)}
           <span className="font-medium">
-            {getStatusText(isDescriptionCompleted ? 'accepted' : state.status)}
+            {getStatusText(state.status)}
           </span>
           {state.timestamp && (
             <span className="text-sm text-gray-500">
