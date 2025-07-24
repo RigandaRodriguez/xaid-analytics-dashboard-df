@@ -16,20 +16,24 @@ export const usePathologyManagementApi = (uid: string) => {
   
   const [pathologyStates, setPathologyStates] = useState<Record<string, PathologyState>>({});
   const [isInitialized, setIsInitialized] = useState(false);
+  const [hasUserChanges, setHasUserChanges] = useState(false);
 
-  // Initialize states from API data only once
+  // Initialize states from API data only once - prevent overwrites
   useEffect(() => {
-    if (pathologyData?.pathologyStates && !isInitialized) {
+    if (pathologyData?.pathologyStates && !isInitialized && !hasUserChanges) {
       console.log('INITIALIZING pathology states from API:', pathologyData.pathologyStates);
       setPathologyStates(pathologyData.pathologyStates);
       setIsInitialized(true);
     }
-  }, [pathologyData, isInitialized]);
+  }, [pathologyData?.pathologyStates, isInitialized, hasUserChanges]);
 
   const handlePathologyAction = (pathologyId: string, action: 'accept' | 'reject') => {
     console.log(`=== PATHOLOGY ACTION START ===`);
     console.log(`Action: ${action} for ${pathologyId}`);
     console.log(`Current pathologyStates before action:`, pathologyStates);
+    
+    // Mark that user has made changes
+    setHasUserChanges(true);
     
     setPathologyStates(prev => {
       const current = prev[pathologyId];
