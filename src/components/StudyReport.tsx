@@ -47,6 +47,11 @@ const StudyReport = () => {
     
     const newStatus = descriptionStatus === 'in_progress' ? 'completed' : 'in_progress';
     setDescriptionStatus(newStatus);
+    
+    // Invalidate queries to refresh pathology data and ensure UI consistency
+    queryClient.invalidateQueries({ queryKey: ['processing-pathologies', study.uid] });
+    queryClient.invalidateQueries({ queryKey: ['processing', study.uid] });
+    
     console.log(`Description status changed to: ${newStatus} for study ${study.uid}`);
   };
 
