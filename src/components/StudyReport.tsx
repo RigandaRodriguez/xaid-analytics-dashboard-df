@@ -37,7 +37,12 @@ const StudyReport = () => {
   } = useStudyActions();
 
   // Handler for completing/unlocking description
-  const handleDescriptionStatusToggle = () => {
+  const handleDescriptionStatusToggle = async () => {
+    if (descriptionStatus === 'in_progress' && pathologyManagement.allPathologiesDecided) {
+      // Save pathology decisions before completing description
+      await pathologyManagement.submitPathologyDecisions();
+    }
+    
     const newStatus = descriptionStatus === 'in_progress' ? 'completed' : 'in_progress';
     setDescriptionStatus(newStatus);
     console.log(`Description status changed to: ${newStatus} for study ${study.uid}`);
@@ -102,6 +107,7 @@ const StudyReport = () => {
             allPathologiesDecided={pathologyManagement.allPathologiesDecided}
             descriptionStatus={descriptionStatus}
             onDescriptionStatusToggle={handleDescriptionStatusToggle}
+            isSubmitting={pathologyManagement.isSubmitting}
             onGoToReports={() => navigate('/reports')}
           />
         </div>

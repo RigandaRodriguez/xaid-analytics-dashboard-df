@@ -12,8 +12,9 @@ interface StudyActionsCardProps {
   canConfirmDiagnosis?: boolean;
   allPathologiesDecided?: boolean;
   descriptionStatus?: 'in_progress' | 'completed';
-  onDescriptionStatusToggle?: () => void;
+  onDescriptionStatusToggle?: () => Promise<void>;
   onGoToReports?: () => void;
+  isSubmitting?: boolean;
 }
 
 const StudyActionsCard: React.FC<StudyActionsCardProps> = ({ 
@@ -24,7 +25,8 @@ const StudyActionsCard: React.FC<StudyActionsCardProps> = ({
   allPathologiesDecided,
   descriptionStatus = 'in_progress',
   onDescriptionStatusToggle,
-  onGoToReports
+  onGoToReports,
+  isSubmitting = false
 }) => {
   const { t } = useLanguage();
 
@@ -62,7 +64,7 @@ const StudyActionsCard: React.FC<StudyActionsCardProps> = ({
           {canConfirmDiagnosis && (
             <Button 
               onClick={onDescriptionStatusToggle}
-              disabled={!canToggleDescription}
+              disabled={!canToggleDescription || isSubmitting}
               variant={canToggleDescription ? "default" : "outline"}
               className={canToggleDescription ? 
                 (isDescriptionCompleted ? 
@@ -72,7 +74,7 @@ const StudyActionsCard: React.FC<StudyActionsCardProps> = ({
                 "border-2 border-gray-300 text-gray-500"
               }
             >
-              {isDescriptionCompleted ? t('studyReport.makeChanges') : t('studyReport.completeDescription')}
+              {isSubmitting ? 'Сохранение...' : (isDescriptionCompleted ? t('studyReport.makeChanges') : t('studyReport.completeDescription'))}
             </Button>
           )}
         </div>
