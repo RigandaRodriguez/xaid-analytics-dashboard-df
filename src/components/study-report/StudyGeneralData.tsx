@@ -91,7 +91,9 @@ const StudyGeneralData: React.FC<StudyGeneralDataProps> = ({
           <div>
             <label className="text-sm font-medium text-gray-500">{t('study.descriptionStatus')}</label>
             <p>
-              {(descriptionStatus || study.descriptionStatus) === 'completed' ? (
+              {isError ? (
+                <span className="text-green-600 font-medium">{t('study.descriptionCompleted')}</span>
+              ) : (descriptionStatus || study.descriptionStatus) === 'completed' ? (
                 <span className="text-green-600 font-medium">{t('study.descriptionCompleted')}</span>
               ) : (
                 <span className="text-yellow-600 font-medium">{t('study.descriptionInProgress')}</span>

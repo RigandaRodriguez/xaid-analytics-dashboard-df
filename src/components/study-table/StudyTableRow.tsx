@@ -67,15 +67,22 @@ const StudyTableRow = ({
     return getStatusBadge(study.status, t);
   };
 
-  const getDescriptionStatusBadge = (status: 'in_progress' | 'completed') => {
+  const getDescriptionStatusBadge = (study: Study) => {
+    // Check if study has processing errors or empty pathology
+    const errorStatuses = ['processing_error', 'data_error', 'precondition_error', 'configuration_error', 'generation_error', 'upload_error'];
+    const isError = errorStatuses.includes(study.status) || !study.pathology || study.pathology === '';
+    
+    // If error or no pathology, show as completed
+    const effectiveStatus = isError ? 'completed' : study.descriptionStatus;
+    
     const statusMap = {
       'in_progress': { text: t('study.descriptionInProgress'), className: 'bg-yellow-100 text-yellow-800' },
       'completed': { text: t('study.descriptionCompleted'), className: 'bg-green-100 text-green-800' }
     };
     
-    const statusInfo = statusMap[status];
+    const statusInfo = statusMap[effectiveStatus as keyof typeof statusMap];
     return (
-      <span className={`px-2 py-1 rounded-full text-xs font-medium ${statusInfo.className}`}>
+      <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium whitespace-nowrap ${statusInfo.className}`}>
         {statusInfo.text}
       </span>
     );
@@ -141,7 +148,7 @@ const StudyTableRow = ({
           {getDoctorRecommendationsBadges(study.doctorRecommendations, study)}
         </div>
       </td>
-      <td className="p-4">{getDescriptionStatusBadge(study.descriptionStatus)}</td>
+      <td className="p-4">{getDescriptionStatusBadge(study)}</td>
     </tr>
   );
 };
