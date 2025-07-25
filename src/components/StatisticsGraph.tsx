@@ -84,7 +84,7 @@ const StatisticsGraph = ({ filteredStudies = [], appliedFilters }: StatisticsGra
       descriptions.push(`${t('study.date')}: ${appliedFilters.date.toLocaleDateString('ru-RU')}`);
     }
     if (appliedFilters.status !== 'all') {
-      const statusText = t(`statuses.${appliedFilters.status}`);
+      const statusText = t(`study.statuses.${appliedFilters.status}`);
       descriptions.push(`${t('study.status')}: ${statusText}`);
     }
     if (appliedFilters.pathology !== t('pathologies.all')) {
