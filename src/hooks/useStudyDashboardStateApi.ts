@@ -19,7 +19,7 @@ export const useStudyDashboardStateApi = () => {
     patientName: '',
     date: null,
     status: 'all',
-    pathology: 'Все патологии',
+    pathology: '',
     descriptionStatus: 'all',
     timeFrom: '',
     timeTo: '',
@@ -86,9 +86,9 @@ export const useStudyDashboardStateApi = () => {
       apiParams.status = statusMapping[currentFilters.status] || currentFilters.status as ProcessingStatus;
     }
 
-    // Handle pathology filtering
-    if (currentFilters.pathology && currentFilters.pathology !== '' && currentFilters.pathology !== 'Все патологии' && !currentFilters.pathology.includes('все')) {
-      // Convert pathology name to key for API (based on actual data from network requests)
+    // Handle pathology filtering - только если выбрана конкретная патология
+    if (currentFilters.pathology && currentFilters.pathology !== '') {
+      // Convert pathology display name to key for API
       const pathologyKeyMapping: Record<string, string> = {
         'Норма': 'normal',
         'Коронарный кальций': 'coronaryCalcium', 
@@ -156,20 +156,23 @@ export const useStudyDashboardStateApi = () => {
 
 
   const hasFiltersChanged = useMemo(() => {
+    const defaultFilters = {
+      uidOrPatientId: '',
+      patientName: '',
+      date: null,
+      status: 'all',
+      pathology: '',
+      descriptionStatus: 'all',
+      timeFrom: '',
+      timeTo: '',
+    };
+    
     // If no filters applied yet, check if current filters are not default
     if (!appliedFilters) {
-      const defaultFilters = {
-        uidOrPatientId: '',
-        patientName: '',
-        date: null,
-        status: 'all',
-        pathology: 'Все патологии',
-        descriptionStatus: 'all',
-        timeFrom: '',
-        timeTo: '',
-      };
       return JSON.stringify(filters) !== JSON.stringify(defaultFilters);
     }
+    
+    // Check if current filters differ from applied filters
     return JSON.stringify(filters) !== JSON.stringify(appliedFilters);
   }, [filters, appliedFilters]);
 
@@ -188,7 +191,7 @@ export const useStudyDashboardStateApi = () => {
         patientName: '',
         date: null,
         status: 'all',
-        pathology: 'Все патологии',
+        pathology: '',
         descriptionStatus: 'all',
         timeFrom: '',
         timeTo: '',
@@ -202,7 +205,7 @@ export const useStudyDashboardStateApi = () => {
       patientName: '',
       date: null,
       status: 'all',
-      pathology: 'Все патологии',
+      pathology: '',
       descriptionStatus: 'all',
       timeFrom: '',
       timeTo: '',

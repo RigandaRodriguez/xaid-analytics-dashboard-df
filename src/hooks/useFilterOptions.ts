@@ -7,10 +7,7 @@ export const useFilterOptions = () => {
 
   // Получаем опции патологий из централизованного реестра
   const allPathologyOptions = getAllPathologyOptions();
-  const pathologyOptions = [
-    t('pathologies.all'),
-    ...allPathologyOptions.map(p => p.displayName)
-  ];
+  const pathologyOptions = allPathologyOptions.map(p => p.displayName);
 
 
   const appointmentStatusOptions = [
