@@ -8,7 +8,6 @@ interface StudyTableHeaderProps {
   totalStudies: number;
   onSelectAll: (checked: boolean) => void;
   onSort: (field: string) => void;
-  viewMode: 'compact' | 'full';
   compactColumns: string[];
 }
 
@@ -17,7 +16,6 @@ const StudyTableHeader = ({
   totalStudies,
   onSelectAll,
   onSort,
-  viewMode,
   compactColumns
 }: StudyTableHeaderProps) => {
   const { t } = useLanguage();
@@ -31,30 +29,14 @@ const StudyTableHeader = ({
             onCheckedChange={onSelectAll}
           />
         </th>
-        {(viewMode === 'full' || compactColumns.includes('uid')) && (
-          <th className="text-left p-4 font-medium bg-white">{t('study.uid')}</th>
-        )}
-        {(viewMode === 'full' || compactColumns.includes('patientId')) && (
-          <th className="text-left p-4 font-medium bg-white">{t('study.patientId')}</th>
-        )}
-        {(viewMode === 'full' || compactColumns.includes('patientName')) && (
-          <th className="text-left p-4 font-medium bg-white">{t('study.patientName')}</th>
-        )}
-        {(viewMode === 'full' || compactColumns.includes('date')) && (
-          <th className="text-left p-4 font-medium bg-white">{t('study.dateTime')}</th>
-        )}
-        {(viewMode === 'full' || compactColumns.includes('status')) && (
-          <th className="text-left p-4 font-medium bg-white">{t('study.status')}</th>
-        )}
-        {(viewMode === 'full' || compactColumns.includes('pathology')) && (
-          <th className="text-left p-4 font-medium bg-white">{t('study.pathologies')}</th>
-        )}
-        {(viewMode === 'full' || compactColumns.includes('recommendations')) && (
-          <th className="text-left p-4 font-medium bg-white">{t('study.recommendations')}</th>
-        )}
-        {(viewMode === 'full' || compactColumns.includes('descriptionStatus')) && (
-          <th className="text-left p-4 font-medium bg-white">{t('study.descriptionStatus')}</th>
-        )}
+        <th className="text-left p-4 font-medium bg-white">{t('study.uid')}</th>
+        <th className="text-left p-4 font-medium bg-white">{t('study.patientId')}</th>
+        <th className="text-left p-4 font-medium bg-white">{t('study.patientName')}</th>
+        <th className="text-left p-4 font-medium bg-white">{t('study.dateTime')}</th>
+        <th className="text-left p-4 font-medium bg-white">{t('study.status')}</th>
+        <th className="text-left p-4 font-medium bg-white">{t('study.pathologies')}</th>
+        <th className="text-left p-4 font-medium bg-white">{t('study.recommendations')}</th>
+        <th className="text-left p-4 font-medium bg-white">{t('study.descriptionStatus')}</th>
       </tr>
     </thead>
   );

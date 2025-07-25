@@ -8,7 +8,6 @@ interface StudyTableBodyProps {
   selectedStudies: string[];
   onSelectStudy: (uid: string, checked: boolean) => void;
   onViewReport: (study: Study) => void;
-  viewMode: 'compact' | 'full';
   compactColumns: string[];
 }
 
@@ -17,7 +16,6 @@ const StudyTableBody = ({
   selectedStudies,
   onSelectStudy,
   onViewReport,
-  viewMode,
   compactColumns
 }: StudyTableBodyProps) => {
   return (
@@ -29,7 +27,6 @@ const StudyTableBody = ({
           isSelected={selectedStudies.includes(study.uid)}
           onSelectStudy={onSelectStudy}
           onViewReport={onViewReport}
-          viewMode={viewMode}
           compactColumns={compactColumns}
         />
       ))}

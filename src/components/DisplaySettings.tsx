@@ -2,15 +2,13 @@
 import React from 'react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
-import { LayoutGrid, List, ChevronDown, ChevronUp } from 'lucide-react';
+import { ChevronDown, ChevronUp } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { useLanguage } from '@/contexts/LanguageContext';
 
 interface DisplaySettingsProps {
   recordsPerPage: number;
   onRecordsPerPageChange: (value: number) => void;
-  viewMode: 'compact' | 'full';
-  onViewModeChange: (mode: 'compact' | 'full') => void;
   sortBy: string;
   sortDirection: 'asc' | 'desc';
   onSortChange: (field: string, direction: 'asc' | 'desc') => void;
@@ -23,8 +21,6 @@ interface DisplaySettingsProps {
 const DisplaySettings = ({
   recordsPerPage,
   onRecordsPerPageChange,
-  viewMode,
-  onViewModeChange,
   sortBy,
   sortDirection,
   onSortChange,
@@ -87,28 +83,6 @@ const DisplaySettings = ({
               </Button>
             </div>
 
-            {/* View mode */}
-            <div className="flex items-center gap-2">
-              <span className="text-sm text-gray-600">{t('displaySettings.mode')}:</span>
-              <div className="flex border rounded-md">
-                <Button
-                  variant={viewMode === 'compact' ? 'default' : 'ghost'}
-                  size="sm"
-                  onClick={() => onViewModeChange('compact')}
-                  className="rounded-r-none"
-                >
-                  <LayoutGrid className="h-4 w-4" />
-                </Button>
-                <Button
-                  variant={viewMode === 'full' ? 'default' : 'ghost'}
-                  size="sm"
-                  onClick={() => onViewModeChange('full')}
-                  className="rounded-l-none"
-                >
-                  <List className="h-4 w-4" />
-                </Button>
-              </div>
-            </div>
           </div>
 
           {/* Records info */}

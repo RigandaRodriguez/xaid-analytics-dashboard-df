@@ -48,8 +48,7 @@ const StudyDashboard = ({ onAddToReport }: StudyDashboardProps) => {
     handleViewReport,
     handleSortChange,
     handlePageChange,
-    handleRecordsPerPageChange,
-    handleViewModeChange
+    handleRecordsPerPageChange
   } = useStudyDashboardStateApi();
 
   const { undoAction, showUndoPanel, handleUndo, handleDismiss } = useUndoActions();
@@ -116,8 +115,6 @@ const StudyDashboard = ({ onAddToReport }: StudyDashboardProps) => {
       <DisplaySettings
         recordsPerPage={paginationConfig.recordsPerPage}
         onRecordsPerPageChange={handleRecordsPerPageChange}
-        viewMode={paginationConfig.viewMode}
-        onViewModeChange={handleViewModeChange}
         sortBy={sortConfig.sortBy}
         sortDirection={sortConfig.sortDirection}
         onSortChange={handleSortChange}
@@ -138,7 +135,6 @@ const StudyDashboard = ({ onAddToReport }: StudyDashboardProps) => {
           onSelectStudy={handleSelectStudy}
           onSelectAll={handleSelectAll}
           onViewReport={handleViewReport}
-          viewMode={paginationConfig.viewMode}
           currentPage={paginationConfig.currentPage}
           totalPages={paginationData.totalPages}
         />

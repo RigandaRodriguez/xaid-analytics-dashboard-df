@@ -18,9 +18,9 @@ export const useStudyDashboardStateApi = () => {
     uidOrPatientId: '',
     patientName: '',
     date: null,
-    status: '',
-    pathology: '',
-    descriptionStatus: '',
+    status: 'all',
+    pathology: 'Все патологии',
+    descriptionStatus: 'all',
     timeFrom: '',
     timeTo: '',
   });
@@ -29,7 +29,6 @@ export const useStudyDashboardStateApi = () => {
   const [paginationConfig, setPaginationConfig] = useState({
     currentPage: 1,
     recordsPerPage: 25,
-    viewMode: 'compact' as 'compact' | 'full',
   });
 
   // Convert UI filters to API format
@@ -73,17 +72,35 @@ export const useStudyDashboardStateApi = () => {
       apiParams.study_created_at__lte = dateTo.toISOString();
     }
 
-    if (currentFilters.status && currentFilters.status !== '') {
+    if (currentFilters.status && currentFilters.status !== '' && currentFilters.status !== 'all') {
       // Map UI status values to API ProcessingStatus
       const statusMapping: Record<string, ProcessingStatus> = {
         'completed': 'success',
         'processing': 'processing',
         'processing_error': 'processing_error',
+        'precondition_error': 'precondition_error',
+        'configuration_error': 'configuration_error',
+        'generation_error': 'generation_error',
+        'upload_error': 'upload_error',
         'data_error': 'processing_error'
       };
       apiParams.status = statusMapping[currentFilters.status] || currentFilters.status as ProcessingStatus;
     }
 
+    // Handle pathology filtering
+    if (currentFilters.pathology && currentFilters.pathology !== '' && currentFilters.pathology !== 'Все патологии' && !currentFilters.pathology.includes('все')) {
+      // Convert pathology name to key for API
+      const pathologyKeyMapping: Record<string, string> = {
+        'Норма': 'normal',
+        'Коронарный кальций': 'coronary_calcium',
+        'Расширение аорты': 'aortic_dilatation',
+        'Остеопороз': 'osteoporosis',
+        'Узлы в легких': 'lung_nodules'
+      };
+      const pathologyKey = pathologyKeyMapping[currentFilters.pathology] || currentFilters.pathology;
+      apiParams.pathology_keys = [pathologyKey];
+    }
+    
     if (currentFilters.pathologyKeys && currentFilters.pathologyKeys.length > 0) {
       apiParams.pathology_keys = currentFilters.pathologyKeys;
     }
@@ -99,17 +116,20 @@ export const useStudyDashboardStateApi = () => {
     refetch,
   } = useProcessings(apiFilters);
 
-  const studies = apiResponse?.studies || [];
+  // Apply client-side description status filtering since API doesn't support it
+  const allStudies = apiResponse?.studies || [];
+  const studies = useMemo(() => {
+    const currentFilters = appliedFilters || filters;
+    if (!currentFilters.descriptionStatus || currentFilters.descriptionStatus === '' || currentFilters.descriptionStatus === 'all') {
+      return allStudies;
+    }
+    return allStudies.filter(study => study.descriptionStatus === currentFilters.descriptionStatus);
+  }, [allStudies, appliedFilters, filters]);
+  
   const totalPages = apiResponse?.pagination?.totalPages || 1;
 
   // Sort and pagination (API handles pagination, but we might want client-side sorting for UX)
   const { sortConfig, sortedStudies, handleSortChange } = useStudySort(studies);
-  const { 
-    paginationData: localPaginationData, 
-    handlePageChange: handleLocalPageChange,
-    handleRecordsPerPageChange,
-    handleViewModeChange 
-  } = useStudyPagination(sortedStudies);
 
   // API pagination handler
   const handlePageChange = (page: number) => {
@@ -127,10 +147,6 @@ export const useStudyDashboardStateApi = () => {
     setSelectedStudies([]);
   };
 
-  // View mode handler
-  const handleViewModeChangeApi = (viewMode: 'compact' | 'full') => {
-    setPaginationConfig(prev => ({ ...prev, viewMode }));
-  };
 
   const hasFiltersChanged = useMemo(() => {
     if (!appliedFilters) return false;
@@ -148,9 +164,9 @@ export const useStudyDashboardStateApi = () => {
       uidOrPatientId: '',
       patientName: '',
       date: null,
-      status: '',
-      pathology: '',
-      descriptionStatus: '',
+      status: 'all',
+      pathology: 'Все патологии',
+      descriptionStatus: 'all',
       timeFrom: '',
       timeTo: '',
     };
@@ -217,6 +233,5 @@ export const useStudyDashboardStateApi = () => {
     handleSortChange,
     handlePageChange,
     handleRecordsPerPageChange: handleRecordsPerPageChangeApi,
-    handleViewModeChange: handleViewModeChangeApi,
   };
 };

@@ -14,7 +14,6 @@ interface StudyTableRowProps {
   isSelected: boolean;
   onSelectStudy: (uid: string, checked: boolean) => void;
   onViewReport: (study: Study) => void;
-  viewMode: 'compact' | 'full';
   compactColumns: string[];
 }
 
@@ -23,7 +22,6 @@ const StudyTableRow = ({
   isSelected,
   onSelectStudy,
   onViewReport,
-  viewMode,
   compactColumns
 }: StudyTableRowProps) => {
   const { t, language } = useLanguage();
@@ -97,47 +95,31 @@ const StudyTableRow = ({
           onCheckedChange={(checked) => onSelectStudy(study.uid, checked as boolean)}
         />
       </td>
-      {(viewMode === 'full' || compactColumns.includes('uid')) && (
-        <td className="p-4 font-mono text-sm">
-          <button
-            onClick={() => onViewReport(study)}
-            className="text-blue-600 hover:text-blue-800 hover:underline"
-          >
-            {study.uid}
-          </button>
-        </td>
-      )}
-      {(viewMode === 'full' || compactColumns.includes('patientId')) && (
-        <td className="p-4 font-mono text-sm">{study.patientId}</td>
-      )}
-      {(viewMode === 'full' || compactColumns.includes('patientName')) && (
-        <td className="p-4 text-sm">{study.patientName}</td>
-      )}
-      {(viewMode === 'full' || compactColumns.includes('date')) && (
-        <td className="p-4 text-sm">
-          {format(study.date, "dd.MM.yyyy HH:mm", { locale: ru })}
-        </td>
-      )}
-      {(viewMode === 'full' || compactColumns.includes('status')) && (
-        <td className="p-4">{getTranslatedStatus(study)}</td>
-      )}
-      {(viewMode === 'full' || compactColumns.includes('pathology')) && (
-        <td className="p-4">
-          <div className="flex flex-wrap gap-1">
-            {getTranslatedPathology(study)}
-          </div>
-        </td>
-      )}
-      {(viewMode === 'full' || compactColumns.includes('recommendations')) && (
-        <td className="p-4">
-          <div className="flex flex-wrap gap-1">
-            {getDoctorRecommendationsBadges(study.doctorRecommendations)}
-          </div>
-        </td>
-      )}
-      {(viewMode === 'full' || compactColumns.includes('descriptionStatus')) && (
-        <td className="p-4">{getDescriptionStatusBadge(study.descriptionStatus)}</td>
-      )}
+      <td className="p-4 font-mono text-sm">
+        <button
+          onClick={() => onViewReport(study)}
+          className="text-blue-600 hover:text-blue-800 hover:underline"
+        >
+          {study.uid}
+        </button>
+      </td>
+      <td className="p-4 font-mono text-sm">{study.patientId}</td>
+      <td className="p-4 text-sm">{study.patientName}</td>
+      <td className="p-4 text-sm">
+        {format(study.date, "dd.MM.yyyy HH:mm", { locale: ru })}
+      </td>
+      <td className="p-4">{getTranslatedStatus(study)}</td>
+      <td className="p-4">
+        <div className="flex flex-wrap gap-1">
+          {getTranslatedPathology(study)}
+        </div>
+      </td>
+      <td className="p-4">
+        <div className="flex flex-wrap gap-1">
+          {getDoctorRecommendationsBadges(study.doctorRecommendations)}
+        </div>
+      </td>
+      <td className="p-4">{getDescriptionStatusBadge(study.descriptionStatus)}</td>
     </tr>
   );
 };

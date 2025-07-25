@@ -12,7 +12,6 @@ interface StudyTableCardProps {
   onSelectStudy: (uid: string, checked: boolean) => void;
   onSelectAll: (checked: boolean) => void;
   onViewReport: (study: Study) => void;
-  viewMode: 'compact' | 'full';
   currentPage: number;
   totalPages: number;
 }
@@ -23,7 +22,6 @@ const StudyTableCard = ({
   onSelectStudy,
   onSelectAll,
   onViewReport,
-  viewMode,
   currentPage,
   totalPages
 }: StudyTableCardProps) => {
@@ -47,7 +45,6 @@ const StudyTableCard = ({
               totalStudies={studies.length}
               onSelectAll={onSelectAll}
               onSort={() => {}}
-              viewMode={viewMode}
               compactColumns={compactColumns}
             />
             <StudyTableBody
@@ -55,7 +52,6 @@ const StudyTableCard = ({
               selectedStudies={selectedStudies}
               onSelectStudy={onSelectStudy}
               onViewReport={onViewReport}
-              viewMode={viewMode}
               compactColumns={compactColumns}
             />
           </table>

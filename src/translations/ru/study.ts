@@ -53,9 +53,14 @@ export default {
   онколог: 'Онколог',
   goToReports: 'Перейти в отчет',
   statuses: {
+    'all': 'Все статусы',
     'completed': 'Завершено',
     'processing': 'В обработке', 
     'processing_error': 'Ошибка обработки',
+    'precondition_error': 'Ошибка предварительных условий',
+    'configuration_error': 'Ошибка конфигурации',
+    'generation_error': 'Ошибка генерации',
+    'upload_error': 'Ошибка загрузки',
     'data_error': 'Ошибка данных'
   },
   doctors: {
