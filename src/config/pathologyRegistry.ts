@@ -31,8 +31,30 @@ export const PATHOLOGY_REGISTRY: Record<string, PathologyDefinition> = {
     category: 'cardiac',
     urgency: 'urgent'
   },
+  // Поддержка API ключа с опечаткой
+  'coronary_сalcium': {
+    key: 'coronary_сalcium',
+    displayName: 'Коронарный кальций',
+    color: 'text-orange-700',
+    bgColor: 'bg-orange-50',
+    borderColor: 'border-orange-200',
+    recommendedPhysicians: ['cardiologist'],
+    category: 'cardiac',
+    urgency: 'urgent'
+  },
   'aorticDilation': {
     key: 'aorticDilation',
+    displayName: 'Расширение аорты',
+    color: 'text-red-700',
+    bgColor: 'bg-red-50',
+    borderColor: 'border-red-200',
+    recommendedPhysicians: ['cardiologist', 'cardiac_surgeon'],
+    category: 'cardiac',
+    urgency: 'immediate'
+  },
+  // Поддержка API ключа
+  'aorta_dilation': {
+    key: 'aorta_dilation',
     displayName: 'Расширение аорты',
     color: 'text-red-700',
     bgColor: 'bg-red-50',
