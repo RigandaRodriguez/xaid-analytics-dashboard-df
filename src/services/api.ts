@@ -112,26 +112,6 @@ class ApiClient {
     });
   }
 
-  async getWithBody<T>(endpoint: string, data?: any, params?: Record<string, any>): Promise<T> {
-    const url = new URL(endpoint, this.baseURL);
-    
-    if (params) {
-      Object.entries(params).forEach(([key, value]) => {
-        if (value !== null && value !== undefined) {
-          if (Array.isArray(value)) {
-            value.forEach(item => url.searchParams.append(key, item));
-          } else {
-            url.searchParams.append(key, String(value));
-          }
-        }
-      });
-    }
-
-    return this.request<T>(url.pathname + url.search, {
-      method: 'GET',
-      body: data ? JSON.stringify(data) : undefined,
-    });
-  }
 }
 
 export const apiClient = new ApiClient();

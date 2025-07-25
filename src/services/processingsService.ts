@@ -36,10 +36,10 @@ export class ProcessingsService {
     if (params.study_created_at__gte) queryParams.study_created_at__gte = params.study_created_at__gte;
     if (params.study_created_at__lte) queryParams.study_created_at__lte = params.study_created_at__lte;
     if (params.status) queryParams.status = params.status;
-
-    // Handle pathology_keys in request body if provided
-    if (params.pathology_keys) {
-      return apiClient.getWithBody<ListProcessingsResponse>('/processings/', params.pathology_keys, queryParams);
+    
+    // Add pathology_keys as query parameter
+    if (params.pathology_keys && params.pathology_keys.length > 0) {
+      queryParams.pathology_keys = params.pathology_keys;
     }
 
     return apiClient.get<ListProcessingsResponse>('/processings/', queryParams);
