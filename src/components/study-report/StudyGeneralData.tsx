@@ -109,13 +109,14 @@ const StudyGeneralData: React.FC<StudyGeneralDataProps> = ({
                     study.pathology;
                 }
                 
-                // Get only accepted pathologies
+                // Get only accepted pathologies with proper translations
                 const acceptedPathologies = Object.entries(pathologyStates)
                   .filter(([key, state]: [string, any]) => state.status === 'accepted')
                   .map(([key, state]: [string, any]) => {
-                    // Try to get translated name, fallback to key
-                    const translatedName = t(`pathologies.names.${key}`);
-                    return translatedName !== `pathologies.names.${key}` ? translatedName : key;
+                    // Try to get translated name from pathologies, not pathologies.names
+                    const translatedName = t(`pathologies.${key}`);
+                    console.log(`Translating ${key}: ${translatedName}`);
+                    return translatedName !== `pathologies.${key}` ? translatedName : key;
                   });
                 
                 const allPathologiesRejected = Object.values(pathologyStates).every((state: any) => state.status === 'rejected');
