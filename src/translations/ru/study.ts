@@ -61,7 +61,8 @@ export default {
     'configuration_error': 'Ошибка конфигурации',
     'generation_error': 'Ошибка генерации',
     'upload_error': 'Ошибка загрузки',
-    'data_error': 'Ошибка данных'
+    'data_error': 'Ошибка данных',
+    'success': 'Завершено'
   },
   doctors: {
     'Кардиолог': 'Кардиолог',

@@ -29,10 +29,15 @@ export const convertCurrency = (amount: number, language: string): number => {
 
 export const getStatusBadge = (status: string, t: (key: string) => string) => {
   const statusMap = {
-    completed: { text: t('statuses.completed'), class: 'bg-green-100 text-green-800' },
-    processing: { text: t('statuses.processing'), class: 'bg-blue-100 text-blue-800' },
-    processing_error: { text: t('statuses.processing_error'), class: 'bg-red-100 text-red-800' },
-    data_error: { text: t('statuses.data_error'), class: 'bg-orange-100 text-orange-800' }
+    completed: { text: t('study.statuses.completed'), class: 'bg-green-100 text-green-800' },
+    processing: { text: t('study.statuses.processing'), class: 'bg-blue-100 text-blue-800' },
+    processing_error: { text: t('study.statuses.processing_error'), class: 'bg-red-100 text-red-800' },
+    data_error: { text: t('study.statuses.data_error'), class: 'bg-orange-100 text-orange-800' },
+    precondition_error: { text: t('study.statuses.precondition_error'), class: 'bg-red-100 text-red-800' },
+    configuration_error: { text: t('study.statuses.configuration_error'), class: 'bg-red-100 text-red-800' },
+    generation_error: { text: t('study.statuses.generation_error'), class: 'bg-red-100 text-red-800' },
+    upload_error: { text: t('study.statuses.upload_error'), class: 'bg-red-100 text-red-800' },
+    success: { text: t('study.statuses.completed'), class: 'bg-green-100 text-green-800' }
   };
   const statusInfo = statusMap[status as keyof typeof statusMap] || { text: status, class: 'bg-gray-100 text-gray-800' };
   return React.createElement('span', {

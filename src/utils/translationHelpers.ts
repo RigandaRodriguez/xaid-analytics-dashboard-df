@@ -23,9 +23,15 @@ export const getTranslatedPathology = (pathology: string, t: (key: string) => st
 
 export const getTranslatedStatus = (status: string, t: (key: string) => string): string => {
   const statusMap: { [key: string]: string } = {
-    'completed': t('statuses.completed'),
-    'processing': t('statuses.processing'),
-    'error': t('statuses.error')
+    'completed': t('study.statuses.completed'),
+    'processing': t('study.statuses.processing'),
+    'processing_error': t('study.statuses.processing_error'),
+    'data_error': t('study.statuses.data_error'),
+    'precondition_error': t('study.statuses.precondition_error'),
+    'configuration_error': t('study.statuses.configuration_error'),
+    'generation_error': t('study.statuses.generation_error'),
+    'upload_error': t('study.statuses.upload_error'),
+    'success': t('study.statuses.completed')
   };
 
   return statusMap[status] || status;
