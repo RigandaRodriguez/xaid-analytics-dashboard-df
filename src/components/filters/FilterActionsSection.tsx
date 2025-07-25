@@ -32,7 +32,6 @@ const FilterActionsSection = ({
       <Button 
         variant="outline"
         onClick={onResetFilters}
-        disabled={!hasFiltersChanged}
       >
         {t('study.resetFilters')}
       </Button>
