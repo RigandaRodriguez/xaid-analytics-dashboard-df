@@ -108,13 +108,13 @@ export const useStudyDashboardStateApi = () => {
     return apiParams;
   }, [appliedFilters, filters, paginationConfig]);
 
-  // Fetch data using API
+  // Fetch data using API only when filters are applied
   const {
     data: apiResponse,
     isLoading,
     error,
     refetch,
-  } = useProcessings(apiFilters);
+  } = useProcessings({ ...apiFilters, enabled: !!appliedFilters });
 
   // Apply client-side description status filtering since API doesn't support it
   const allStudies = apiResponse?.studies || [];
@@ -149,7 +149,20 @@ export const useStudyDashboardStateApi = () => {
 
 
   const hasFiltersChanged = useMemo(() => {
-    if (!appliedFilters) return false;
+    // If no filters applied yet, check if current filters are not default
+    if (!appliedFilters) {
+      const defaultFilters = {
+        uidOrPatientId: '',
+        patientName: '',
+        date: null,
+        status: 'all',
+        pathology: 'Все патологии',
+        descriptionStatus: 'all',
+        timeFrom: '',
+        timeTo: '',
+      };
+      return JSON.stringify(filters) !== JSON.stringify(defaultFilters);
+    }
     return JSON.stringify(filters) !== JSON.stringify(appliedFilters);
   }, [filters, appliedFilters]);
 
@@ -158,6 +171,23 @@ export const useStudyDashboardStateApi = () => {
     setPaginationConfig(prev => ({ ...prev, currentPage: 1 }));
     setSelectedStudies([]);
   };
+
+  // Initial load effect
+  useEffect(() => {
+    if (!appliedFilters) {
+      // Load initial data without filters
+      setAppliedFilters({
+        uidOrPatientId: '',
+        patientName: '',
+        date: null,
+        status: 'all',
+        pathology: 'Все патологии',
+        descriptionStatus: 'all',
+        timeFrom: '',
+        timeTo: '',
+      });
+    }
+  }, [appliedFilters]);
 
   const handleResetFilters = () => {
     const resetFilters: StudyFilters = {
@@ -171,7 +201,7 @@ export const useStudyDashboardStateApi = () => {
       timeTo: '',
     };
     setFilters(resetFilters);
-    setAppliedFilters(null);
+    setAppliedFilters(resetFilters); // Apply reset filters immediately
     setPaginationConfig(prev => ({ ...prev, currentPage: 1 }));
     setSelectedStudies([]);
   };
