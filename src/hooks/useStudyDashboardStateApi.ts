@@ -89,13 +89,13 @@ export const useStudyDashboardStateApi = () => {
 
     // Handle pathology filtering
     if (currentFilters.pathology && currentFilters.pathology !== '' && currentFilters.pathology !== 'Все патологии' && !currentFilters.pathology.includes('все')) {
-      // Convert pathology name to key for API
+      // Convert pathology name to key for API (based on actual data from network requests)
       const pathologyKeyMapping: Record<string, string> = {
         'Норма': 'normal',
-        'Коронарный кальций': 'coronary_calcium',
-        'Расширение аорты': 'aortic_dilatation',
+        'Коронарный кальций': 'coronaryCalcium',
+        'Расширение аорты': 'aorticDilation',
         'Остеопороз': 'osteoporosis',
-        'Узлы в легких': 'lung_nodules'
+        'Узлы в легких': 'lungNodules'
       };
       const pathologyKey = pathologyKeyMapping[currentFilters.pathology] || currentFilters.pathology;
       apiParams.pathology_keys = [pathologyKey];
