@@ -20,13 +20,13 @@ export const usePathologyManagementApi = (uid: string) => {
 
   // Initialize states from API data only once - prevent overwrites
   useEffect(() => {
-    if (pathologyData?.pathologyStates && !isInitialized) {
-      console.log('INITIALIZING pathology states from API:', pathologyData.pathologyStates);
+    if (pathologyData?.pathologies && !isInitialized && !hasUserChanges) {
+      console.log('INITIALIZING pathology states from API');
       console.log('Raw pathology data:', pathologyData.pathologies);
       
-      // Verify the mapping is correct
+      // Create mapped states directly from API pathologies  
       const mappedStates: Record<string, PathologyState> = {};
-      pathologyData.pathologies?.forEach(pathology => {
+      pathologyData.pathologies.forEach(pathology => {
         const apiStatus = pathology.recommendation_status;
         console.log(`Mapping ${pathology.pathology_key}: API status = ${apiStatus}`);
         
@@ -47,7 +47,7 @@ export const usePathologyManagementApi = (uid: string) => {
       setIsInitialized(true);
       console.log('Final initialized states:', mappedStates);
     }
-  }, [pathologyData?.pathologyStates, pathologyData?.pathologies, isInitialized]);
+  }, [pathologyData?.pathologies, isInitialized, hasUserChanges]);
 
   const handlePathologyAction = (pathologyId: string, action: 'accept' | 'reject') => {
     console.log(`=== PATHOLOGY ACTION START ===`);
@@ -128,9 +128,10 @@ export const usePathologyManagementApi = (uid: string) => {
     
     await updatePathologiesMutation.mutateAsync({ uid, data: requestData });
     
-    // Reset user changes flag and re-initialize after successful submission
+    // Reset user changes flag after successful submission
     setHasUserChanges(false);
-    setIsInitialized(false); // Force re-initialization with fresh API data
+    
+    // Don't force re-initialization - let React Query handle updates naturally
   };
 
   const allPathologiesDecided = Object.values(pathologyStates).every(
