@@ -19,16 +19,76 @@ const StatisticsGraph = ({ appliedFilters }: StatisticsGraphProps) => {
   });
 
   // Get filtered studies using the same API call as the main dashboard
+  const filteredApiParams = React.useMemo(() => {
+    if (!appliedFilters) return null;
+    
+    const params: any = {
+      per_page: 1000,
+    };
+    
+    if (appliedFilters.uidOrPatientId) {
+      params.search_query = appliedFilters.uidOrPatientId;
+    }
+    
+    if (appliedFilters.patientName) {
+      params.patient_name = appliedFilters.patientName;
+    }
+    
+    if (appliedFilters.status && appliedFilters.status !== 'all') {
+      // Map UI status to API status
+      const statusMapping: Record<string, string> = {
+        'completed': 'success',
+        'processing': 'processing',
+        'processing_error': 'processing_error',
+        'precondition_error': 'precondition_error',
+        'configuration_error': 'configuration_error',
+        'generation_error': 'generation_error',
+        'upload_error': 'upload_error'
+      };
+      params.status = statusMapping[appliedFilters.status] || appliedFilters.status;
+    }
+    
+    if (appliedFilters.pathology && appliedFilters.pathology !== 'Все патологии' && !appliedFilters.pathology.includes('все')) {
+      const pathologyKeyMapping: Record<string, string> = {
+        'Норма': 'normal',
+        'Коронарный кальций': 'coronaryCalcium', 
+        'Расширение аорты': 'aorticDilation',
+        'Остеопороз': 'osteoporosis',
+        'Узлы в легких': 'lungNodules',
+      };
+      const pathologyKey = pathologyKeyMapping[appliedFilters.pathology] || appliedFilters.pathology;
+      params.pathology_keys = [pathologyKey];
+    }
+    
+    if (appliedFilters.date) {
+      const date = appliedFilters.date;
+      let dateFrom = new Date(date);
+      let dateTo = new Date(date);
+      
+      if (appliedFilters.timeFrom) {
+        const [hours, minutes] = appliedFilters.timeFrom.split(':');
+        dateFrom.setHours(parseInt(hours), parseInt(minutes), 0, 0);
+      } else {
+        dateFrom.setHours(0, 0, 0, 0);
+      }
+      
+      if (appliedFilters.timeTo) {
+        const [hours, minutes] = appliedFilters.timeTo.split(':');
+        dateTo.setHours(parseInt(hours), parseInt(minutes), 59, 999);
+      } else {
+        dateTo.setHours(23, 59, 59, 999);
+      }
+      
+      params.study_created_at__gte = dateFrom.toISOString();
+      params.study_created_at__lte = dateTo.toISOString();
+    }
+    
+    return params;
+  }, [appliedFilters]);
+
   const { data: filteredApiData, isLoading: isFilteredLoading } = useProcessings({
-    per_page: 1000,
-    search_query: appliedFilters?.uidOrPatientId || undefined,
-    patient_name: appliedFilters?.patientName || undefined,
-    status: appliedFilters?.status !== 'all' ? appliedFilters?.status as any : undefined,
-    pathology_keys: appliedFilters?.pathology && appliedFilters.pathology !== 'Все патологии' && !appliedFilters.pathology.includes('все') 
-      ? [appliedFilters.pathology] : undefined,
-    study_created_at__gte: appliedFilters?.date ? new Date(appliedFilters.date).toISOString() : undefined,
-    study_created_at__lte: appliedFilters?.date ? new Date(appliedFilters.date).toISOString() : undefined,
-    enabled: !!appliedFilters
+    ...filteredApiParams,
+    enabled: !!filteredApiParams
   });
 
   // Generate chart data from API data
