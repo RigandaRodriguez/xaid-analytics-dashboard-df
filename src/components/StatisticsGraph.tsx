@@ -7,16 +7,28 @@ import { useProcessings } from '@/hooks/api/useProcessings';
 import { format, eachDayOfInterval, startOfDay, endOfDay } from 'date-fns';
 
 interface StatisticsGraphProps {
-  filteredStudies?: any[];
   appliedFilters?: StudyFilters | null;
 }
 
-const StatisticsGraph = ({ filteredStudies = [], appliedFilters }: StatisticsGraphProps) => {
+const StatisticsGraph = ({ appliedFilters }: StatisticsGraphProps) => {
   const { t } = useLanguage();
   
   // Get all studies from API for the last 30 days
   const { data: apiData, isLoading } = useProcessings({
     per_page: 1000, // Get many records to build statistics
+  });
+
+  // Get filtered studies using the same API call as the main dashboard
+  const { data: filteredApiData, isLoading: isFilteredLoading } = useProcessings({
+    per_page: 1000,
+    search_query: appliedFilters?.uidOrPatientId || undefined,
+    patient_name: appliedFilters?.patientName || undefined,
+    status: appliedFilters?.status !== 'all' ? appliedFilters?.status as any : undefined,
+    pathology_keys: appliedFilters?.pathology && appliedFilters.pathology !== 'Все патологии' && !appliedFilters.pathology.includes('все') 
+      ? [appliedFilters.pathology] : undefined,
+    study_created_at__gte: appliedFilters?.date ? new Date(appliedFilters.date).toISOString() : undefined,
+    study_created_at__lte: appliedFilters?.date ? new Date(appliedFilters.date).toISOString() : undefined,
+    enabled: !!appliedFilters
   });
 
   // Generate chart data from API data
@@ -51,15 +63,15 @@ const StatisticsGraph = ({ filteredStudies = [], appliedFilters }: StatisticsGra
     });
   }, [apiData?.studies]);
 
-  // Calculate filtered data by date only if filters are applied
+  // Calculate filtered data by date using API response
   const filteredDataByDate = React.useMemo(() => {
     if (!chartData.length) return [];
     
-    if (!appliedFilters || filteredStudies.length === 0) {
+    if (!appliedFilters || !filteredApiData?.studies || filteredApiData.studies.length === 0) {
       return chartData.map(item => ({ ...item, filteredStudies: 0 }));
     }
 
-    const filteredCounts = filteredStudies.reduce((acc, study) => {
+    const filteredCounts = filteredApiData.studies.reduce((acc, study) => {
       const dateKey = format(startOfDay(study.date), 'yyyy-MM-dd');
       acc[dateKey] = (acc[dateKey] || 0) + 1;
       return acc;
@@ -69,7 +81,7 @@ const StatisticsGraph = ({ filteredStudies = [], appliedFilters }: StatisticsGra
       ...item,
       filteredStudies: filteredCounts[item.dateKey] || 0
     }));
-  }, [filteredStudies, appliedFilters, chartData]);
+  }, [filteredApiData?.studies, appliedFilters, chartData]);
 
   // Generate description text for applied filters
   const getAppliedFiltersDescription = () => {
@@ -98,7 +110,7 @@ const StatisticsGraph = ({ filteredStudies = [], appliedFilters }: StatisticsGra
     return descriptions.join(', ');
   };
 
-  const shouldShowFilteredLine = appliedFilters && filteredStudies.length > 0;
+  const shouldShowFilteredLine = appliedFilters && filteredApiData?.studies && filteredApiData.studies.length > 0;
   const filtersDescription = getAppliedFiltersDescription();
 
   // Generate dynamic period display
@@ -109,7 +121,7 @@ const StatisticsGraph = ({ filteredStudies = [], appliedFilters }: StatisticsGra
     return `${firstDate} – ${lastDate}`;
   }, [chartData]);
 
-  if (isLoading) {
+  if (isLoading || isFilteredLoading) {
     return (
       <div className="bg-white rounded-lg border border-gray-200 p-6">
         <div className="animate-pulse">
@@ -127,7 +139,7 @@ const StatisticsGraph = ({ filteredStudies = [], appliedFilters }: StatisticsGra
         <p className="text-sm text-gray-600">{t('statistics.period')}: {periodDisplay}</p>
         {shouldShowFilteredLine && (
           <p className="text-sm text-blue-600 mt-1">
-            {t('statistics.blueLineDescription')} ({filteredStudies.length} {t('statistics.studiesCount')})
+            {t('statistics.blueLineDescription')} ({filteredApiData?.studies?.length || 0} {t('statistics.studiesCount')})
             {filtersDescription && (
               <span className="block text-xs text-gray-500 mt-1">
                 {t('statistics.appliedFilters')}: {filtersDescription}

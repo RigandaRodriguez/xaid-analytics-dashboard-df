@@ -96,7 +96,6 @@ const StudyDashboard = ({ onAddToReport }: StudyDashboardProps) => {
   return (
     <div className="space-y-6 pb-20">
       <StatisticsGraph 
-        filteredStudies={appliedFilteredStudies} 
         appliedFilters={appliedFilters}
       />
 
