@@ -20,12 +20,34 @@ export const usePathologyManagementApi = (uid: string) => {
 
   // Initialize states from API data only once - prevent overwrites
   useEffect(() => {
-    if (pathologyData?.pathologyStates && !isInitialized && !hasUserChanges) {
+    if (pathologyData?.pathologyStates && !isInitialized) {
       console.log('INITIALIZING pathology states from API:', pathologyData.pathologyStates);
-      setPathologyStates(pathologyData.pathologyStates);
+      console.log('Raw pathology data:', pathologyData.pathologies);
+      
+      // Verify the mapping is correct
+      const mappedStates: Record<string, PathologyState> = {};
+      pathologyData.pathologies?.forEach(pathology => {
+        const apiStatus = pathology.recommendation_status;
+        console.log(`Mapping ${pathology.pathology_key}: API status = ${apiStatus}`);
+        
+        mappedStates[pathology.pathology_key] = {
+          id: pathology.pathology_key,
+          status: apiStatus === 'accepted' ? 'accepted' : 
+                  apiStatus === 'rejected' ? 'rejected' : 'pending',
+          originalText: pathologyData.pathologyNames?.find(name => name.includes(pathology.pathology_key)) || pathology.pathology_key,
+          editedText: pathologyData.pathologyNames?.find(name => name.includes(pathology.pathology_key)) || pathology.pathology_key,
+          isEditing: false,
+          timestamp: new Date(pathology.updated_at)
+        };
+        
+        console.log(`Mapped state for ${pathology.pathology_key}:`, mappedStates[pathology.pathology_key]);
+      });
+      
+      setPathologyStates(mappedStates);
       setIsInitialized(true);
+      console.log('Final initialized states:', mappedStates);
     }
-  }, [pathologyData?.pathologyStates, isInitialized, hasUserChanges]);
+  }, [pathologyData?.pathologyStates, pathologyData?.pathologies, isInitialized]);
 
   const handlePathologyAction = (pathologyId: string, action: 'accept' | 'reject') => {
     console.log(`=== PATHOLOGY ACTION START ===`);
@@ -57,9 +79,11 @@ export const usePathologyManagementApi = (uid: string) => {
       console.log('NEW pathology states after action:', newState);
       console.log(`=== PATHOLOGY ACTION END ===`);
       
+      // Show toast notification
+      const actionText = action === 'accept' ? 'Диагноз принят' : 'Диагноз отклонен';
       toast({
         title: t(`studyReport.pathologyActions.${action}`),
-        description: action === 'accept' ? 'Диагноз принят' : 'Диагноз отклонен'
+        description: actionText
       });
       
       return newState;
@@ -104,8 +128,9 @@ export const usePathologyManagementApi = (uid: string) => {
     
     await updatePathologiesMutation.mutateAsync({ uid, data: requestData });
     
-    // Reset user changes flag after successful submission
+    // Reset user changes flag and re-initialize after successful submission
     setHasUserChanges(false);
+    setIsInitialized(false); // Force re-initialization with fresh API data
   };
 
   const allPathologiesDecided = Object.values(pathologyStates).every(
