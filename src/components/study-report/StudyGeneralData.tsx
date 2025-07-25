@@ -7,6 +7,7 @@ import { Study } from '@/types/study';
 import { getStatusBadge, getAdditionalRevenueText } from '@/utils/studyHelpers';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { getDoctorRecommendations, getDoctorBadgeClass } from '@/utils/doctorRecommendations';
+import { getPhysicianDisplayName, getPhysicianBadgeClass } from '@/config/physicianConfig';
 
 interface StudyGeneralDataProps {
   study: Study;
@@ -180,12 +181,8 @@ const StudyGeneralData: React.FC<StudyGeneralDataProps> = ({
                   pathologyData.pathologies.forEach((pathology: any) => {
                     const pathologyState = pathologyStates[pathology.pathology_key];
                     if (pathologyState?.status === 'accepted' && pathology.recommendation_physician_key) {
-                      // Try physicians translations first, then fallback to the key itself
-                      let physicianName = t(`physicians.${pathology.recommendation_physician_key}`);
-                      if (physicianName === `physicians.${pathology.recommendation_physician_key}`) {
-                        // Fallback to the raw key if no translation found
-                        physicianName = pathology.recommendation_physician_key;
-                      }
+                      // Use the physician config to get proper display name
+                      const physicianName = getPhysicianDisplayName(pathology.recommendation_physician_key);
                       
                       console.log(`Translating physician ${pathology.recommendation_physician_key}: ${physicianName}`);
                       
@@ -217,7 +214,7 @@ const StudyGeneralData: React.FC<StudyGeneralDataProps> = ({
                       key={index}
                       className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${getDoctorBadgeClass(recommendation)}`}
                     >
-                      {t(`study.doctors.${recommendation}`) !== `study.doctors.${recommendation}` ? t(`study.doctors.${recommendation}`) : recommendation}
+                      {recommendation}
                     </span>
                   ));
                 }
