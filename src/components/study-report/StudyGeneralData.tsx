@@ -13,13 +13,15 @@ interface StudyGeneralDataProps {
   allPathologiesDecided: boolean;
   descriptionStatus?: 'in_progress' | 'completed';
   pathologyStates?: Record<string, any>; // Add pathology states to determine rejection status
+  pathologyData?: any; // Raw pathology data with recommendation_physician_key
 }
 
 const StudyGeneralData: React.FC<StudyGeneralDataProps> = ({ 
   study, 
   allPathologiesDecided, 
   descriptionStatus, 
-  pathologyStates 
+  pathologyStates,
+  pathologyData
 }) => {
   const { t, language } = useLanguage();
   const isProcessing = study.status === 'processing';
@@ -166,21 +168,47 @@ const StudyGeneralData: React.FC<StudyGeneralDataProps> = ({
                 
                 // Check if all pathologies are rejected
                 const allPathologiesRejected = Object.values(pathologyStates).every((state: any) => state.status === 'rejected');
-                const hasAcceptedPathologies = Object.values(pathologyStates).some((state: any) => state.status === 'accepted');
-                
-                console.log('StudyGeneralData - recommendations section:', {
-                  pathologyStates,
-                  allPathologiesRejected,
-                  hasAcceptedPathologies,
-                  doctorRecommendations
-                });
                 
                 if (allPathologiesRejected) {
                   return <span className="text-gray-500">—</span>;
                 }
                 
-                if (hasAcceptedPathologies && doctorRecommendations.length > 0) {
-                  return doctorRecommendations.map((recommendation, index) => (
+                // Get recommendations only for accepted pathologies
+                const acceptedRecommendations: string[] = [];
+                
+                if (pathologyData?.pathologies) {
+                  pathologyData.pathologies.forEach((pathology: any) => {
+                    const pathologyState = pathologyStates[pathology.pathology_key];
+                    if (pathologyState?.status === 'accepted' && pathology.recommendation_physician_key) {
+                      // Map physician key to display name
+                      const physicianName = t(`study.doctors.${pathology.recommendation_physician_key}`) !== `study.doctors.${pathology.recommendation_physician_key}` 
+                        ? t(`study.doctors.${pathology.recommendation_physician_key}`) 
+                        : pathology.recommendation_physician_key;
+                      
+                      if (!acceptedRecommendations.includes(physicianName)) {
+                        acceptedRecommendations.push(physicianName);
+                      }
+                    }
+                  });
+                } else {
+                  // Fallback to study.doctorRecommendations if pathologyData is not available
+                  study.doctorRecommendations?.forEach(recommendation => {
+                    if (Object.values(pathologyStates).some((state: any) => state.status === 'accepted')) {
+                      acceptedRecommendations.push(recommendation);
+                    }
+                  });
+                }
+                
+                console.log('StudyGeneralData - recommendations section:', {
+                  pathologyStates,
+                  allPathologiesRejected,
+                  hasAcceptedPathologies: Object.values(pathologyStates).some((state: any) => state.status === 'accepted'),
+                  acceptedRecommendations,
+                  originalDoctorRecommendations: study.doctorRecommendations
+                });
+                
+                if (acceptedRecommendations.length > 0) {
+                  return acceptedRecommendations.map((recommendation, index) => (
                     <span
                       key={index}
                       className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${getDoctorBadgeClass(recommendation)}`}

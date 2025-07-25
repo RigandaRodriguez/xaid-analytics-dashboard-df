@@ -104,6 +104,7 @@ const StudyReport = () => {
             allPathologiesDecided={pathologyManagement.allPathologiesDecided} 
             descriptionStatus={descriptionStatus}
             pathologyStates={pathologyManagement.pathologyStates}
+            pathologyData={pathologyManagement.pathologyData}
           />
 
           {clinicalRecommendation && !isProcessing && !isError && (
