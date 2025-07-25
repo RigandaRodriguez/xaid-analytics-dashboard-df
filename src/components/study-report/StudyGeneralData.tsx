@@ -1,12 +1,14 @@
 
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Clock, User, Calendar, Heart, Users, AlertTriangle } from 'lucide-react';
 import { format } from 'date-fns';
 import { ru } from 'date-fns/locale';
 import { Study } from '@/types/study';
 import { getStatusBadge, getAdditionalRevenueText } from '@/utils/studyHelpers';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { getPhysicianDisplayName, getPhysicianBadgeClassByDisplayName } from '@/config/physicianConfig';
+import { getPathologyDisplayName } from '@/config/pathologyRegistry';
 
 interface StudyGeneralDataProps {
   study: Study;
@@ -115,10 +117,10 @@ const StudyGeneralData: React.FC<StudyGeneralDataProps> = ({
                 const acceptedPathologies = Object.entries(pathologyStates)
                   .filter(([key, state]: [string, any]) => state.status === 'accepted')
                   .map(([key, state]: [string, any]) => {
-                    // Try to get translated name from pathologies, not pathologies.names
-                    const translatedName = t(`pathologies.${key}`);
-                    console.log(`Translating ${key}: ${translatedName}`);
-                    return translatedName !== `pathologies.${key}` ? translatedName : key;
+                    // Use centralized pathology registry
+                    const displayName = getPathologyDisplayName(key);
+                    console.log(`Translating ${key}: ${displayName}`);
+                    return displayName;
                   });
                 
                 const allPathologiesRejected = Object.values(pathologyStates).every((state: any) => state.status === 'rejected');

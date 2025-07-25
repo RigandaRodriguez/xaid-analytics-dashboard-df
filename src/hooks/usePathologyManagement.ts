@@ -158,10 +158,10 @@ export const usePathologyManagement = (initialPathology: string | string[]) => {
     }));
   };
 
-  // Исправляем логику: патологии считаются решенными только если они приняты или исправлены
-  // Отклоненные патологии НЕ считаются решенными для завершения описания
+  // Исправляем логику: патологии считаются решенными если они приняты, отклонены или исправлены
+  // Только pending патологии блокируют завершение описания
   const allPathologiesDecided = Object.values(pathologyStates).every(
-    state => state.status === 'accepted' || state.status === 'corrected'
+    state => state.status === 'accepted' || state.status === 'rejected' || state.status === 'corrected'
   );
 
   return {

@@ -54,9 +54,11 @@ const FilterControls = ({ searchTerm, onSearchChange, onClearFilters }: FilterCo
         
         <select className="px-3 py-2 border border-gray-300 rounded-md text-sm">
           <option>{t('study.allPathologies')}</option>
-          <option>{t('pathologies.pneumonia')}</option>
-          <option>{t('pathologies.tuberculosis')}</option>
-          <option>{t('pathologies.tumor')}</option>
+          <option>{t('pathologies.normal')}</option>
+          <option>{t('pathologies.coronaryCalcium')}</option>
+          <option>{t('pathologies.aorticDilation')}</option>
+          <option>{t('pathologies.osteoporosis')}</option>
+          <option>{t('pathologies.lungNodules')}</option>
         </select>
         
         

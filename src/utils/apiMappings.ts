@@ -27,9 +27,9 @@ export function mapProcessingToStudy(processing: Processing, pathologies?: Proce
     status: mapProcessingStatusToStudyStatus(processing.status),
     pathology: pathologies ? getDisplayPathologyNames(pathologies) : [],
     pathologyStates, // Include pathology states for rejection tracking
-    // Описание завершено только если все патологии приняты (в API нет статуса corrected)
+    // Описание завершено только если все патологии решены (приняты или отклонены)
     descriptionStatus: pathologies && pathologies.every(p => 
-      p.recommendation_status === 'accepted'
+      p.recommendation_status === 'accepted' || p.recommendation_status === 'rejected'
     ) ? 'completed' : 'in_progress',
     statusKey: processing.status,
     pathologyKey: undefined, // Will be set when pathologies are loaded

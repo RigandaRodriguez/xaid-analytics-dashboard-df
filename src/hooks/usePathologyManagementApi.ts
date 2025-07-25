@@ -134,10 +134,10 @@ export const usePathologyManagementApi = (uid: string) => {
     // Don't force re-initialization - let React Query handle updates naturally
   };
 
-  // Исправляем логику: патологии считаются решенными только если они приняты
-  // В API нет статуса 'corrected', используется только 'accepted'
+  // Исправляем логику: патологии считаются решенными если они приняты ИЛИ отклонены
+  // Только pending патологии блокируют завершение описания
   const allPathologiesDecided = Object.values(pathologyStates).every(
-    state => state.status === 'accepted'
+    state => state.status === 'accepted' || state.status === 'rejected'
   );
 
   const getPhysicianName = (physicianKey: string): string => {
