@@ -16,6 +16,8 @@ interface DisplaySettingsProps {
   currentPage: number;
   startRecord: number;
   endRecord: number;
+  viewMode?: 'compact' | 'full';
+  onViewModeChange?: (mode: 'compact' | 'full') => void;
 }
 
 const DisplaySettings = ({
@@ -27,7 +29,9 @@ const DisplaySettings = ({
   totalRecords,
   currentPage,
   startRecord,
-  endRecord
+  endRecord,
+  viewMode,
+  onViewModeChange
 }: DisplaySettingsProps) => {
   const { t } = useLanguage();
 
