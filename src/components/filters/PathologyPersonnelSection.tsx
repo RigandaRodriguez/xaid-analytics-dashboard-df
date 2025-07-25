@@ -21,7 +21,7 @@ const PathologyPersonnelSection = ({ filters, onFilterChange }: PathologyPersonn
           <SelectValue placeholder={t('study.pathologies')} />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="">{t('pathologies.all')}</SelectItem>
+          <SelectItem value="all">{t('pathologies.all')}</SelectItem>
           {pathologyOptions.map((pathology, index) => (
             <SelectItem key={index} value={pathology}>{pathology}</SelectItem>
           ))}

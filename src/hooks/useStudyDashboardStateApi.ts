@@ -19,7 +19,7 @@ export const useStudyDashboardStateApi = () => {
     patientName: '',
     date: null,
     status: 'all',
-    pathology: '',
+    pathology: 'all',
     descriptionStatus: 'all',
     timeFrom: '',
     timeTo: '',
@@ -87,7 +87,7 @@ export const useStudyDashboardStateApi = () => {
     }
 
     // Handle pathology filtering - только если выбрана конкретная патология
-    if (currentFilters.pathology && currentFilters.pathology !== '') {
+    if (currentFilters.pathology && currentFilters.pathology !== '' && currentFilters.pathology !== 'all') {
       // Convert pathology display name to key for API
       const pathologyKeyMapping: Record<string, string> = {
         'Норма': 'normal',
@@ -161,7 +161,7 @@ export const useStudyDashboardStateApi = () => {
       patientName: '',
       date: null,
       status: 'all',
-      pathology: '',
+      pathology: 'all',
       descriptionStatus: 'all',
       timeFrom: '',
       timeTo: '',
@@ -191,7 +191,7 @@ export const useStudyDashboardStateApi = () => {
         patientName: '',
         date: null,
         status: 'all',
-        pathology: '',
+        pathology: 'all',
         descriptionStatus: 'all',
         timeFrom: '',
         timeTo: '',
@@ -205,7 +205,7 @@ export const useStudyDashboardStateApi = () => {
       patientName: '',
       date: null,
       status: 'all',
-      pathology: '',
+      pathology: 'all',
       descriptionStatus: 'all',
       timeFrom: '',
       timeTo: '',
