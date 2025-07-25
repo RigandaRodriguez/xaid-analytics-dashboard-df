@@ -69,8 +69,33 @@ export function getStudyPathologyDisplay(pathology: string | string[], pathology
  * Получает список всех доступных патологий для фильтров
  */
 export function getAllPathologyOptions(): Array<{ key: string; displayName: string }> {
-  return Object.entries(PATHOLOGY_REGISTRY).map(([key, definition]) => ({
-    key,
-    displayName: definition.displayName
-  }));
+  // Фильтруем дублированные патологии по displayName, оставляя только уникальные
+  const uniquePathologies = new Map<string, { key: string; displayName: string }>();
+  
+  Object.entries(PATHOLOGY_REGISTRY).forEach(([key, definition]) => {
+    const existingEntry = uniquePathologies.get(definition.displayName);
+    // Если уже есть патология с таким displayName, выбираем предпочтительный ключ
+    if (!existingEntry || shouldPreferKey(key, existingEntry.key)) {
+      uniquePathologies.set(definition.displayName, {
+        key,
+        displayName: definition.displayName
+      });
+    }
+  });
+  
+  return Array.from(uniquePathologies.values());
+}
+
+// Функция для определения предпочтительного ключа при дублировании
+function shouldPreferKey(newKey: string, existingKey: string): boolean {
+  // Предпочитаем API ключи (с подчеркиваниями) над внутренними ключами
+  const apiKeys = ['coronary_сalcium', 'aorta_dilation'];
+  const newIsApi = apiKeys.includes(newKey);
+  const existingIsApi = apiKeys.includes(existingKey);
+  
+  if (newIsApi && !existingIsApi) return true;
+  if (!newIsApi && existingIsApi) return false;
+  
+  // Если оба или ни один - оставляем существующий
+  return false;
 }
