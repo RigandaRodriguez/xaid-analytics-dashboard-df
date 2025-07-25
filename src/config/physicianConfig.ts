@@ -76,3 +76,10 @@ export function getPhysicianBadgeClass(physicianKey: string): string {
   const config = getPhysicianConfig(physicianKey);
   return config?.badgeClass || 'bg-gray-50 text-gray-700';
 }
+
+// Новая функция для получения класса по отображаемому имени
+export function getPhysicianBadgeClassByDisplayName(displayName: string): string {
+  // Найти конфигурацию по отображаемому имени
+  const config = Object.values(PHYSICIAN_CONFIG).find(c => c.displayName === displayName);
+  return config?.badgeClass || 'bg-gray-50 text-gray-700';
+}

@@ -1,6 +1,7 @@
 export default {
   radiologist: 'Врач-рентгенолог',
-  cardiologist: 'Кардиолог', 
+  cardiologist: 'Кардиолог',
+  cardiac_surgeon: 'Кардиохирург', // Добавляем недостающий ключ
   pulmonologist: 'Пульмонолог',
   orthopedist: 'Ортопед',
   neurologist: 'Невролог',

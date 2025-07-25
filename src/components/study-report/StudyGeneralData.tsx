@@ -6,8 +6,7 @@ import { ru } from 'date-fns/locale';
 import { Study } from '@/types/study';
 import { getStatusBadge, getAdditionalRevenueText } from '@/utils/studyHelpers';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { getDoctorRecommendations, getDoctorBadgeClass } from '@/utils/doctorRecommendations';
-import { getPhysicianDisplayName, getPhysicianBadgeClass } from '@/config/physicianConfig';
+import { getPhysicianDisplayName, getPhysicianBadgeClassByDisplayName } from '@/config/physicianConfig';
 
 interface StudyGeneralDataProps {
   study: Study;
@@ -59,8 +58,8 @@ const StudyGeneralData: React.FC<StudyGeneralDataProps> = ({
     return t('studyReport.diagnosisConfirmed');
   };
   
-  // Get doctor recommendations based on pathology
-  const doctorRecommendations = study.doctorRecommendations || getDoctorRecommendations(study.pathology);
+  // Get doctor recommendations from study data
+  const doctorRecommendations = study.doctorRecommendations || [];
 
   return (
     <Card>
@@ -157,9 +156,9 @@ const StudyGeneralData: React.FC<StudyGeneralDataProps> = ({
                     doctorRecommendations.map((recommendation, index) => (
                       <span
                         key={index}
-                        className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${getDoctorBadgeClass(recommendation)}`}
+                        className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${getPhysicianBadgeClassByDisplayName(recommendation)}`}
                       >
-                        {t(`study.doctors.${recommendation}`) !== `study.doctors.${recommendation}` ? t(`study.doctors.${recommendation}`) : recommendation}
+                        {recommendation}
                       </span>
                     ))
                   ) : (
@@ -181,10 +180,10 @@ const StudyGeneralData: React.FC<StudyGeneralDataProps> = ({
                   pathologyData.pathologies.forEach((pathology: any) => {
                     const pathologyState = pathologyStates[pathology.pathology_key];
                     if (pathologyState?.status === 'accepted' && pathology.recommendation_physician_key) {
-                      // Use the physician config to get proper display name
+                      // Use the physician config to get proper display name from API key
                       const physicianName = getPhysicianDisplayName(pathology.recommendation_physician_key);
                       
-                      console.log(`Translating physician ${pathology.recommendation_physician_key}: ${physicianName}`);
+                      console.log(`API key: ${pathology.recommendation_physician_key} → Display name: ${physicianName}`);
                       
                       if (!acceptedRecommendations.includes(physicianName)) {
                         acceptedRecommendations.push(physicianName);
@@ -212,7 +211,7 @@ const StudyGeneralData: React.FC<StudyGeneralDataProps> = ({
                   return acceptedRecommendations.map((recommendation, index) => (
                     <span
                       key={index}
-                      className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${getDoctorBadgeClass(recommendation)}`}
+                      className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${getPhysicianBadgeClassByDisplayName(recommendation)}`}
                     >
                       {recommendation}
                     </span>
