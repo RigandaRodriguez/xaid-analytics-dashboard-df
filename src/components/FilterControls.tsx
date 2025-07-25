@@ -3,7 +3,7 @@ import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { getAllPathologyOptions } from '@/utils/pathologyHelpers';
+
 
 interface FilterControlsProps {
   searchTerm: string;
@@ -51,15 +51,6 @@ const FilterControls = ({ searchTerm, onSearchChange, onClearFilters }: FilterCo
           <option>{t('statuses.completed')}</option>
           <option>{t('statuses.processing')}</option>
           <option>{t('statuses.error')}</option>
-        </select>
-        
-        <select className="px-3 py-2 border border-gray-300 rounded-md text-sm">
-          <option>{t('pathologies.all')}</option>
-          {getAllPathologyOptions().map((pathology) => (
-            <option key={pathology.key} value={pathology.key}>
-              {pathology.displayName}
-            </option>
-          ))}
         </select>
         
         

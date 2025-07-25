@@ -7,6 +7,7 @@ import { useProcessings } from '@/hooks/api/useProcessings';
 import { ProcessingStatus } from '@/types/api';
 import { useStudySort } from '@/hooks/useStudySort';
 import { useStudyPagination } from '@/hooks/useStudyPagination';
+import { getAllPathologyOptions } from '@/utils/pathologyHelpers';
 
 export const useStudyDashboardStateApi = () => {
   const navigate = useNavigate();
@@ -88,24 +89,26 @@ export const useStudyDashboardStateApi = () => {
 
     // Handle pathology filtering - только если выбрана конкретная патология
     if (currentFilters.pathology && currentFilters.pathology !== '' && currentFilters.pathology !== 'all') {
-      // Convert pathology display name to key for API
-      const pathologyKeyMapping: Record<string, string> = {
-        'Норма': 'normal',
-        'Коронарный кальций': 'coronaryCalcium', 
-        'Расширение аорты': 'aorticDilation',
-        'Остеопороз': 'osteoporosis',
-        'Узлы в легких': 'lungNodules',
-        // Also support direct pathology keys from API
-        'normal': 'normal',
-        'coronaryCalcium': 'coronaryCalcium',
-        'aorticDilation': 'aorticDilation',
-        'osteoporosis': 'osteoporosis',
-        'lungNodules': 'lungNodules',
-        '1': '1',
-        '2': '2'
-      };
-      const pathologyKey = pathologyKeyMapping[currentFilters.pathology] || currentFilters.pathology;
-      apiParams.pathology_keys = [pathologyKey];
+      // Найти ключ патологии по displayName из централизованного реестра
+      const allPathologies = getAllPathologyOptions();
+      const pathologyOption = allPathologies.find(p => p.displayName === currentFilters.pathology);
+      
+      if (pathologyOption) {
+        apiParams.pathology_keys = [pathologyOption.key];
+      } else {
+        // Fallback для прямых ключей
+        const directKeyMapping: Record<string, string> = {
+          'normal': 'normal',
+          'coronaryCalcium': 'coronaryCalcium',
+          'aorticDilation': 'aorticDilation',
+          'osteoporosis': 'osteoporosis',
+          'lungNodules': 'lungNodules',
+          '1': '1',
+          '2': '2'
+        };
+        const pathologyKey = directKeyMapping[currentFilters.pathology] || currentFilters.pathology;
+        apiParams.pathology_keys = [pathologyKey];
+      }
     }
     
     if (currentFilters.pathologyKeys && currentFilters.pathologyKeys.length > 0) {
