@@ -73,7 +73,7 @@ export const useStudyDashboardStateApi = () => {
     }
 
     if (currentFilters.status && currentFilters.status !== '' && currentFilters.status !== 'all') {
-      // Map UI status values to API ProcessingStatus
+      // Map UI status values to API ProcessingStatus  
       const statusMapping: Record<string, ProcessingStatus> = {
         'completed': 'success',
         'processing': 'processing',
@@ -81,8 +81,7 @@ export const useStudyDashboardStateApi = () => {
         'precondition_error': 'precondition_error',
         'configuration_error': 'configuration_error',
         'generation_error': 'generation_error',
-        'upload_error': 'upload_error',
-        'data_error': 'processing_error'
+        'upload_error': 'upload_error'
       };
       apiParams.status = statusMapping[currentFilters.status] || currentFilters.status as ProcessingStatus;
     }
