@@ -180,10 +180,14 @@ const StudyGeneralData: React.FC<StudyGeneralDataProps> = ({
                   pathologyData.pathologies.forEach((pathology: any) => {
                     const pathologyState = pathologyStates[pathology.pathology_key];
                     if (pathologyState?.status === 'accepted' && pathology.recommendation_physician_key) {
-                      // Map physician key to display name
-                      const physicianName = t(`study.doctors.${pathology.recommendation_physician_key}`) !== `study.doctors.${pathology.recommendation_physician_key}` 
-                        ? t(`study.doctors.${pathology.recommendation_physician_key}`) 
-                        : pathology.recommendation_physician_key;
+                      // Try physicians translations first, then fallback to the key itself
+                      let physicianName = t(`physicians.${pathology.recommendation_physician_key}`);
+                      if (physicianName === `physicians.${pathology.recommendation_physician_key}`) {
+                        // Fallback to the raw key if no translation found
+                        physicianName = pathology.recommendation_physician_key;
+                      }
+                      
+                      console.log(`Translating physician ${pathology.recommendation_physician_key}: ${physicianName}`);
                       
                       if (!acceptedRecommendations.includes(physicianName)) {
                         acceptedRecommendations.push(physicianName);
