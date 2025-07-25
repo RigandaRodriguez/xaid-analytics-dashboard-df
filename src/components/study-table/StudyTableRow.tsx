@@ -6,7 +6,7 @@ import { format } from 'date-fns';
 import { ru } from 'date-fns/locale';
 import { Study } from '@/types/study';
 import { getStatusBadge, calculateAdditionalRevenue, formatCurrency } from '@/utils/studyHelpers';
-import { getPhysicianBadgeClass } from '@/config/physicianConfig';
+import { getDoctorBadgeClass } from '@/utils/doctorRecommendations';
 import { useLanguage } from '@/contexts/LanguageContext';
 
 interface StudyTableRowProps {
@@ -99,7 +99,7 @@ const StudyTableRow = ({
     return recommendations.map((doctor, index) => (
       <span 
         key={`${doctor}-${index}`} 
-        className={`inline-block px-2 py-1 rounded-full text-xs mr-1 mb-1 ${getPhysicianBadgeClass(doctor)}`}
+        className={`inline-block px-2 py-1 rounded-full text-xs mr-1 mb-1 ${getDoctorBadgeClass(doctor)}`}
       >
         {doctor}
       </span>
