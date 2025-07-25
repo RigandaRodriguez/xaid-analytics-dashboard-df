@@ -27,14 +27,24 @@ const StudyGeneralData: React.FC<StudyGeneralDataProps> = ({
   
   // Determine the diagnosis status based on pathology states
   const getDiagnosisStatus = () => {
+    console.log('StudyGeneralData - getDiagnosisStatus called with:', {
+      allPathologiesDecided,
+      pathologyStates,
+      pathologyStatesKeys: pathologyStates ? Object.keys(pathologyStates) : null
+    });
+    
     if (!allPathologiesDecided) {
       return t('studyReport.notReviewed');
     }
     
     if (pathologyStates) {
       const pathologyValues = Object.values(pathologyStates);
+      console.log('StudyGeneralData - pathologyValues:', pathologyValues);
+      
       const allRejected = pathologyValues.every((state: any) => state.status === 'rejected');
       const someAccepted = pathologyValues.some((state: any) => state.status === 'accepted');
+      
+      console.log('StudyGeneralData - status check:', { allRejected, someAccepted });
       
       if (allRejected) {
         return t('studyReport.pathologyStatuses.rejected');
@@ -96,6 +106,12 @@ const StudyGeneralData: React.FC<StudyGeneralDataProps> = ({
                 const allPathologiesRejected = pathologyStates && 
                   Object.values(pathologyStates).every((state: any) => state.status === 'rejected');
                 
+                console.log('StudyGeneralData - finding section:', {
+                  pathologyStates,
+                  allPathologiesRejected,
+                  studyPathology: study.pathology
+                });
+                
                 if (allPathologiesRejected) {
                   return t('studyReport.pathologyStatuses.rejected');
                 }
@@ -117,6 +133,12 @@ const StudyGeneralData: React.FC<StudyGeneralDataProps> = ({
                 // Check if all pathologies are rejected
                 const allPathologiesRejected = pathologyStates && 
                   Object.values(pathologyStates).every((state: any) => state.status === 'rejected');
+                
+                console.log('StudyGeneralData - recommendations section:', {
+                  pathologyStates,
+                  allPathologiesRejected,
+                  doctorRecommendations
+                });
                 
                 if (allPathologiesRejected) {
                   return <span className="text-gray-500">—</span>;
