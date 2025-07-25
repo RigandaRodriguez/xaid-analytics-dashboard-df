@@ -1,17 +1,15 @@
 
 import { useLanguage } from '@/contexts/LanguageContext';
+import { getAllPathologyOptions } from '@/utils/pathologyHelpers';
 
 export const useFilterOptions = () => {
   const { t } = useLanguage();
 
+  // Получаем опции патологий из централизованного реестра
+  const allPathologyOptions = getAllPathologyOptions();
   const pathologyOptions = [
     t('pathologies.all'),
-    t('pathologies.normal'),
-    t('pathologies.coronaryCalcium'),
-    t('pathologies.aorticDilation'),
-    t('pathologies.osteoporosis'),
-    t('pathologies.lungNodules'),
-    t('pathologies.ribFractures')
+    ...allPathologyOptions.map(p => p.displayName)
   ];
 
 
