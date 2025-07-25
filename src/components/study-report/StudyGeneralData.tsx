@@ -102,12 +102,27 @@ const StudyGeneralData: React.FC<StudyGeneralDataProps> = ({
             <label className="text-sm font-medium text-gray-500">{t('studyReport.finding')}</label>
             <div>
               {(() => {
-                // Check if all pathologies are rejected
-                const allPathologiesRejected = pathologyStates && 
-                  Object.values(pathologyStates).every((state: any) => state.status === 'rejected');
+                if (!pathologyStates) {
+                  // Fallback to original pathology if no states available
+                  return Array.isArray(study.pathology) ? 
+                    study.pathology.join(', ') : 
+                    study.pathology;
+                }
+                
+                // Get only accepted pathologies
+                const acceptedPathologies = Object.entries(pathologyStates)
+                  .filter(([key, state]: [string, any]) => state.status === 'accepted')
+                  .map(([key, state]: [string, any]) => {
+                    // Try to get translated name, fallback to key
+                    const translatedName = t(`pathologies.names.${key}`);
+                    return translatedName !== `pathologies.names.${key}` ? translatedName : key;
+                  });
+                
+                const allPathologiesRejected = Object.values(pathologyStates).every((state: any) => state.status === 'rejected');
                 
                 console.log('StudyGeneralData - finding section:', {
                   pathologyStates,
+                  acceptedPathologies,
                   allPathologiesRejected,
                   studyPathology: study.pathology
                 });
@@ -116,9 +131,11 @@ const StudyGeneralData: React.FC<StudyGeneralDataProps> = ({
                   return t('studyReport.pathologyStatuses.rejected');
                 }
                 
-                return Array.isArray(study.pathology) ? 
-                  study.pathology.join(', ') : 
-                  study.pathology;
+                if (acceptedPathologies.length > 0) {
+                  return acceptedPathologies.join(', ');
+                }
+                
+                return t('studyReport.pathologyStatuses.rejected');
               })()}
             </div>
           </div>
@@ -130,13 +147,30 @@ const StudyGeneralData: React.FC<StudyGeneralDataProps> = ({
             <label className="text-sm font-medium text-gray-500">{t('study.recommendations')}</label>
             <div className="flex flex-wrap gap-1 mt-1">
               {(() => {
+                if (!pathologyStates) {
+                  // Fallback to original recommendations if no states available
+                  return doctorRecommendations.length > 0 ? (
+                    doctorRecommendations.map((recommendation, index) => (
+                      <span
+                        key={index}
+                        className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${getDoctorBadgeClass(recommendation)}`}
+                      >
+                        {t(`study.doctors.${recommendation}`) !== `study.doctors.${recommendation}` ? t(`study.doctors.${recommendation}`) : recommendation}
+                      </span>
+                    ))
+                  ) : (
+                    <span className="text-gray-500 text-sm">{t('common.no')}</span>
+                  );
+                }
+                
                 // Check if all pathologies are rejected
-                const allPathologiesRejected = pathologyStates && 
-                  Object.values(pathologyStates).every((state: any) => state.status === 'rejected');
+                const allPathologiesRejected = Object.values(pathologyStates).every((state: any) => state.status === 'rejected');
+                const hasAcceptedPathologies = Object.values(pathologyStates).some((state: any) => state.status === 'accepted');
                 
                 console.log('StudyGeneralData - recommendations section:', {
                   pathologyStates,
                   allPathologiesRejected,
+                  hasAcceptedPathologies,
                   doctorRecommendations
                 });
                 
@@ -144,18 +178,18 @@ const StudyGeneralData: React.FC<StudyGeneralDataProps> = ({
                   return <span className="text-gray-500">—</span>;
                 }
                 
-                return doctorRecommendations.length > 0 ? (
-                  doctorRecommendations.map((recommendation, index) => (
+                if (hasAcceptedPathologies && doctorRecommendations.length > 0) {
+                  return doctorRecommendations.map((recommendation, index) => (
                     <span
                       key={index}
                       className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${getDoctorBadgeClass(recommendation)}`}
                     >
                       {t(`study.doctors.${recommendation}`) !== `study.doctors.${recommendation}` ? t(`study.doctors.${recommendation}`) : recommendation}
                     </span>
-                  ))
-                ) : (
-                  <span className="text-gray-500 text-sm">{t('common.no')}</span>
-                );
+                  ));
+                }
+                
+                return <span className="text-gray-500 text-sm">{t('common.no')}</span>;
               })()}
             </div>
           </div>
