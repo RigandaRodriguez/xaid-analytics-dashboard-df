@@ -11,6 +11,7 @@ export interface Study {
   clinicalRecommendations?: string;
   doctorRecommendations?: string[];
   pathologyDecisions?: PathologyDecision[];
+  pathologyStates?: Record<string, any>; // Add pathology states for rejection tracking
   // Store API-compatible keys
   pathologyKey?: string;
   statusKey?: string;

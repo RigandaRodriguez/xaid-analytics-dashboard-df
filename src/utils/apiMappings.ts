@@ -8,6 +8,17 @@ import { getDisplayPathologyNames, getApiRecommendedPhysicians } from '@/utils/p
  * Map API Processing to UI Study
  */
 export function mapProcessingToStudy(processing: Processing, pathologies?: ProcessingPathology[]): Study {
+  // Map pathologies to states for rejection tracking
+  const pathologyStates: Record<string, any> = {};
+  if (pathologies) {
+    pathologies.forEach(pathology => {
+      pathologyStates[pathology.pathology_key] = {
+        status: mapRecommendationStatusToPathologyStatus(pathology.recommendation_status),
+        text: pathology.pathology_key
+      };
+    });
+  }
+
   return {
     uid: processing.uid,
     patientId: processing.patient_id,
@@ -15,6 +26,7 @@ export function mapProcessingToStudy(processing: Processing, pathologies?: Proce
     date: new Date(processing.study_created_at),
     status: mapProcessingStatusToStudyStatus(processing.status),
     pathology: pathologies ? getDisplayPathologyNames(pathologies) : [],
+    pathologyStates, // Include pathology states for rejection tracking
     descriptionStatus: processing.status === 'success' ? 'completed' : 'in_progress',
     statusKey: processing.status,
     pathologyKey: undefined, // Will be set when pathologies are loaded

@@ -14,8 +14,10 @@ export function useUpdateProcessingPathologies() {
       return processingsService.updateProcessingPathologies(uid, data);
     },
     onSuccess: (data: ProcessingPathology[], variables) => {
-      // Invalidate and refetch processing pathologies
+      // Invalidate and refetch processing pathologies and main dashboard
       queryClient.invalidateQueries({ queryKey: ['processing-pathologies', variables.uid] });
+      queryClient.invalidateQueries({ queryKey: ['processing', variables.uid] });
+      queryClient.invalidateQueries({ queryKey: ['processings'] }); // Refresh main dashboard
       
       toast({
         title: t('studyReport.completeDescription'),

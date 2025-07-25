@@ -27,6 +27,18 @@ const StudyTableRow = ({
   const { t, language } = useLanguage();
 
   const getTranslatedPathology = (study: Study) => {
+    // Check if all pathologies are rejected
+    const allPathologiesRejected = study.pathologyStates && 
+      Object.values(study.pathologyStates).every((state: any) => state.status === 'rejected');
+    
+    if (allPathologiesRejected) {
+      return (
+        <span className="inline-block bg-red-50 text-red-700 px-2 py-1 rounded-full text-xs">
+          {t('studyReport.pathologyStatuses.rejected')}
+        </span>
+      );
+    }
+    
     if (Array.isArray(study.pathology)) {
       return study.pathology.map((pathology, index) => (
         <span key={`${pathology}-${index}`} className="inline-block bg-purple-50 text-purple-700 px-2 py-1 rounded-full text-xs mr-1 mb-1">
@@ -69,7 +81,17 @@ const StudyTableRow = ({
     );
   };
 
-  const getDoctorRecommendationsBadges = (recommendations?: string[]) => {
+  const getDoctorRecommendationsBadges = (recommendations?: string[], study?: Study) => {
+    // Check if all pathologies are rejected
+    const allPathologiesRejected = study?.pathologyStates && 
+      Object.values(study.pathologyStates).every((state: any) => state.status === 'rejected');
+    
+    if (allPathologiesRejected) {
+      return (
+        <span className="text-gray-500">—</span>
+      );
+    }
+    
     if (!recommendations || recommendations.length === 0) {
       return null;
     }
@@ -116,7 +138,7 @@ const StudyTableRow = ({
       </td>
       <td className="p-4">
         <div className="flex flex-wrap gap-1">
-          {getDoctorRecommendationsBadges(study.doctorRecommendations)}
+          {getDoctorRecommendationsBadges(study.doctorRecommendations, study)}
         </div>
       </td>
       <td className="p-4">{getDescriptionStatusBadge(study.descriptionStatus)}</td>

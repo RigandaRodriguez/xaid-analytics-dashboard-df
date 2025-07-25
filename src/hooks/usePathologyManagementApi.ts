@@ -103,6 +103,9 @@ export const usePathologyManagementApi = (uid: string) => {
     console.log(`=== SUBMIT PATHOLOGY DECISIONS END ===`);
     
     await updatePathologiesMutation.mutateAsync({ uid, data: requestData });
+    
+    // Reset user changes flag after successful submission
+    setHasUserChanges(false);
   };
 
   const allPathologiesDecided = Object.values(pathologyStates).every(
