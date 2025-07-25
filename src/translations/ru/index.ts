@@ -1,6 +1,4 @@
 
-import navigation from './navigation';
-import header from './header';
 import profile from './profile';
 import study from './study';
 import reports from './reports';
@@ -14,8 +12,8 @@ import clinicalRecommendations from './clinicalRecommendations';
 import physicians from './physicians';
 
 export default {
-  navigation,
-  header,
+  navigation: common.navigation,
+  header: common.header,
   profile,
   accessLevels: common.accessLevels,
   study,
@@ -35,7 +33,7 @@ export default {
   studyReport,
   physicians,
   specialties: common.specialties,
-  statistics: ui.statistics,
+  statistics: common.statistics,
   displaySettings: ui.displaySettings,
   bulkActions: ui.bulkActions,
   messages: ui.messages,

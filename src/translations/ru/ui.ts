@@ -1,14 +1,5 @@
 
 export default {
-  statistics: {
-    title: 'Статистика исследований',
-    period: 'Период',
-    allStudies: 'Все исследования',
-    byFilter: 'По фильтру',
-    blueLineDescription: 'Синяя линия - все исследования, оранжевая линия - по фильтру',
-    appliedFilters: 'Применённые фильтры',
-    studiesCount: 'исследований'
-  },
   displaySettings: {
     recordsPerPage: 'Записей на странице',
     sorting: 'Сортировка',

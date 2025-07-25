@@ -87,5 +87,25 @@ export default {
   currency: {
     rubles: '₽',
     symbol: '₽'
+  },
+  statistics: {
+    title: 'Статистика исследований',
+    period: 'Период',
+    allStudies: 'Все исследования',
+    byFilter: 'По фильтру',
+    blueLineDescription: 'Синяя линия - все исследования, оранжевая линия - по фильтру',
+    appliedFilters: 'Применённые фильтры',
+    studiesCount: 'исследований'
+  },
+  navigation: {
+    dashboard: 'Дашборд исследований',
+    reports: 'Отчеты',
+    logging: 'Логгирование',
+    profile: 'Профиль',
+    logout: 'Выйти',
+    back: 'Назад'
+  },
+  header: {
+    brand: 'xAID'
   }
 };
