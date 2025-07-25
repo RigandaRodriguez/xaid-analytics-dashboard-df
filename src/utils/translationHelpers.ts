@@ -1,24 +1,26 @@
 import { Study } from '@/types/study';
 
+// DEPRECATED: Use getTranslatedPathology from @/utils/pathologyHelpers instead
 export const getTranslatedPathology = (pathology: string, t: (key: string) => string): string => {
-  const pathologyMap: { [key: string]: string } = {
-    'Норма': t('pathologies.normal'),
-    'Коронарный кальций': t('pathologies.coronaryCalcium'),
-    'Расширение аорты': t('pathologies.aorticDilation'),
-    'Остеопороз': t('pathologies.osteoporosis'),
-    'Узлы в легких': t('pathologies.lungNodules'),
-    'Переломы ребер': t('pathologies.ribFractures'),
-    'Пневмония': t('pathologies.pneumonia'),
-    'Коронарные кальцинаты': t('pathologies.coronaryCalcifications'),
-    'Плевральный выпот — 500 мл': `${t('pathologies.pleuralEffusion')} — 500 мл`,
-    'Плевральный выпот — 750 мл': `${t('pathologies.pleuralEffusion')} — 750 мл`,
-    'Плевральный выпот — 1000 мл': `${t('pathologies.pleuralEffusion')} — 1000 мл`,
-    'Пневмоторакс': t('pathologies.pneumothorax'),
-    'Туберкулез': t('pathologies.tuberculosis'),
-    'Опухоль': t('pathologies.tumor')
+  // Import the new helper to avoid duplication
+  const { getPathologyDisplayName } = require('@/config/pathologyRegistry');
+  
+  // Map old display names to keys for backward compatibility
+  const displayToKeyMap: { [key: string]: string } = {
+    'Норма': 'normal',
+    'Коронарный кальций': 'coronaryCalcium',
+    'Расширение аорты': 'aorticDilation',
+    'Остеопороз': 'osteoporosis',
+    'Узлы в легких': 'lungNodules'
   };
-
-  return pathologyMap[pathology] || pathology;
+  
+  const pathologyKey = displayToKeyMap[pathology];
+  if (pathologyKey) {
+    return getPathologyDisplayName(pathologyKey);
+  }
+  
+  // Fallback for unknown pathologies
+  return pathology;
 };
 
 export const getTranslatedStatus = (status: string, t: (key: string) => string): string => {
@@ -128,7 +130,9 @@ export const translateStudyData = (study: any, t: (key: string) => string): any 
   const translatedAppointmentStatus = getTranslatedAppointmentStatus(originalAppointmentStatus, t);
   const translatedDoctor = getTranslatedDoctor(originalAssignedDoctor, t);
   const translatedRadiologist = getTranslatedRadiologist(originalRadiologist, t);
-  const translatedPathology = getTranslatedPathology(originalPathology, t);
+  // Use new centralized pathology helper
+  const { getTranslatedPathology: getPathology } = require('@/utils/pathologyHelpers');
+  const translatedPathology = getPathology(originalPathology);
 
   console.log('Translation debug - translated values:', {
     translatedStatus,

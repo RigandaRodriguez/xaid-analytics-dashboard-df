@@ -1,5 +1,5 @@
 import { ProcessingPathology, RecommendationStatus } from '@/types/api';
-import { getPathologyDisplayName, getPathologyRecommendedPhysicians } from '@/config/pathologyConfig';
+import { getPathologyDisplayName, getPathologyRecommendedPhysicians } from '@/config/pathologyRegistry';
 import { getPhysicianDisplayName } from '@/config/physicianConfig';
 
 /**

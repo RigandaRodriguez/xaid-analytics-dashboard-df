@@ -6,7 +6,7 @@ import common from './common';
 import logging from './logging';
 import studyReport from './studyReport';
 import ui from './ui';
-import pathologies from './pathologies';
+// Removed pathologies import - now centralized in pathologyRegistry
 import referenceValues from './referenceValues';
 import clinicalRecommendations from './clinicalRecommendations';
 import physicians from './physicians';
@@ -18,10 +18,7 @@ export default {
   accessLevels: common.accessLevels,
   study,
   statuses: common.statuses,
-  pathologies: {
-    ...common.pathologies,
-    names: pathologies
-  },
+  pathologies: common.pathologies,
   referenceValues,
   clinicalRecommendations,
   consultation: common.consultation,

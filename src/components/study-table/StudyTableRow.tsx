@@ -8,6 +8,7 @@ import { Study } from '@/types/study';
 import { getStatusBadge, calculateAdditionalRevenue, formatCurrency } from '@/utils/studyHelpers';
 import { getPhysicianBadgeClassByDisplayName } from '@/config/physicianConfig';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { getStudyPathologyDisplay } from '@/utils/pathologyHelpers';
 
 interface StudyTableRowProps {
   study: Study;
@@ -39,23 +40,22 @@ const StudyTableRow = ({
       );
     }
     
+    const pathologyDisplay = getStudyPathologyDisplay(study.pathology, study.pathologyKey);
+    
     if (Array.isArray(study.pathology)) {
-      return study.pathology.map((pathology, index) => (
-        <span key={`${pathology}-${index}`} className="inline-block bg-purple-50 text-purple-700 px-2 py-1 rounded-full text-xs mr-1 mb-1">
-          {pathology}
-        </span>
-      ));
+      return study.pathology.map((pathology, index) => {
+        const display = getStudyPathologyDisplay(pathology, study.pathologyKey);
+        return (
+          <span key={`${pathology}-${index}`} className={`${display.badgeClasses} mr-1 mb-1`}>
+            {display.displayText}
+          </span>
+        );
+      });
     }
-    if (study.pathologyKey) {
-      return (
-        <span className="inline-block bg-purple-50 text-purple-700 px-2 py-1 rounded-full text-xs">
-          {t(`pathologies.names.${study.pathologyKey}`)}
-        </span>
-      );
-    }
+    
     return (
-      <span className="inline-block bg-purple-50 text-purple-700 px-2 py-1 rounded-full text-xs">
-        {study.pathology}
+      <span className={pathologyDisplay.badgeClasses}>
+        {pathologyDisplay.displayText}
       </span>
     );
   };

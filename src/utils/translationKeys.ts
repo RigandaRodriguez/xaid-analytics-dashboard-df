@@ -1,5 +1,6 @@
 // Translation key mappings for consistency across the application
 
+// DEPRECATED: Use PATHOLOGY_REGISTRY from @/config/pathologyRegistry instead
 export const PATHOLOGY_KEYS = {
   'Норма': 'normal',
   'Коронарный кальций': 'coronaryCalcium',

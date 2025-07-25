@@ -6,7 +6,7 @@ import { ru } from 'date-fns/locale';
 import { PathologyState, PathologyStatus } from '@/types/pathology';
 import { ProcessingPathology } from '@/types/api';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { getPathologyDisplayName } from '@/config/pathologyConfig';
+import { getPathologyDisplayName } from '@/config/pathologyRegistry';
 import { getPhysicianDisplayName } from '@/config/physicianConfig';
 
 interface PathologyItemApiProps {

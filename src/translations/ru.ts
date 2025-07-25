@@ -3,7 +3,7 @@ import study from './ru/study';
 import reports from './ru/reports';
 import studyReport from './ru/studyReport';
 import logging from './ru/logging';
-import pathologies from './ru/pathologies';
+// Removed pathologies import - now centralized in pathologyRegistry
 import referenceValues from './ru/referenceValues';
 import messages from './ru/messages';
 
@@ -13,7 +13,7 @@ export default {
   reports,
   studyReport,
   logging,
-  pathologies,
+  // pathologies moved to common.pathologies
   referenceValues,
   messages,
 };

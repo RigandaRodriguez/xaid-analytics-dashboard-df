@@ -7,7 +7,7 @@ import { format } from 'date-fns';
 import { ru } from 'date-fns/locale';
 import { PathologyState, PathologyStatus } from '@/types/pathology';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { getTranslatedPathology } from '@/utils/translationHelpers';
+import { getTranslatedPathology } from '@/utils/pathologyHelpers';
 
 interface PathologyItemProps {
   pathology: { id: string; name: string; reference: string };
@@ -50,7 +50,7 @@ const PathologyItem: React.FC<PathologyItemProps> = ({
   };
 
   // Get translated pathology name using the correct translation helper
-  const translatedPathology = getTranslatedPathology(pathology.name, t);
+  const translatedPathology = getTranslatedPathology(pathology.name);
   const translatedReference = t(`referenceValues.${pathology.name}`) || pathology.reference;
   
   // Get clinical recommendation with proper fallback handling

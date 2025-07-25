@@ -4,6 +4,7 @@ import { processingsService } from '@/services/processingsService';
 import { mapProcessingPathologyToPathologyState } from '@/utils/apiMappings';
 import { PathologyState } from '@/types/pathology';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { getPathologyDisplayName } from '@/config/pathologyRegistry';
 
 export function useProcessingPathologies(uid: string, enabled: boolean = true) {
   const { t } = useLanguage();
@@ -18,8 +19,8 @@ export function useProcessingPathologies(uid: string, enabled: boolean = true) {
       const pathologyNames: string[] = [];
       
       pathologies.forEach(pathology => {
-        // Get pathology display name from translation
-        const pathologyText = t(`pathologies.names.${pathology.pathology_key}`) || pathology.pathology_key;
+        // Get pathology display name from centralized registry
+        const pathologyText = getPathologyDisplayName(pathology.pathology_key);
         pathologyNames.push(pathologyText);
         
         pathologyStates[pathology.pathology_key] = mapProcessingPathologyToPathologyState(

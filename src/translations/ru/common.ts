@@ -21,14 +21,13 @@ export default {
     osteoporosis: 'Остеопороз',
     lungNodules: 'Узлы в легких',
     ribFractures: 'Переломы ребер',
-    names: {
-      normal: 'Норма',
-      coronaryCalcium: 'Коронарный кальций',
-      aorticDilation: 'Расширение аорты',
-      osteoporosis: 'Остеопороз',
-      lungNodules: 'Узлы в легких',
-      ribFractures: 'Переломы ребер'
-    }
+    pneumonia: 'Пневмония',
+    coronaryCalcifications: 'Коронарные кальцинаты',
+    pleuralEffusion: 'Плевральный выпот',
+    pneumothorax: 'Пневмоторакс',
+    tuberculosis: 'Туберкулез',
+    tumor: 'Опухоль'
+    // Удален раздел names - теперь используется централизованный pathologyRegistry
   },
   consultation: {
     all: 'Все направления',
