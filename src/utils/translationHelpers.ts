@@ -1,10 +1,9 @@
 import { Study } from '@/types/study';
+import { getPathologyDisplayName } from '@/config/pathologyRegistry';
+import { getTranslatedPathology as getPathology } from '@/utils/pathologyHelpers';
 
 // DEPRECATED: Use getTranslatedPathology from @/utils/pathologyHelpers instead
 export const getTranslatedPathology = (pathology: string, t: (key: string) => string): string => {
-  // Import the new helper to avoid duplication
-  const { getPathologyDisplayName } = require('@/config/pathologyRegistry');
-  
   // Map old display names to keys for backward compatibility
   const displayToKeyMap: { [key: string]: string } = {
     'Норма': 'normal',
@@ -131,7 +130,6 @@ export const translateStudyData = (study: any, t: (key: string) => string): any 
   const translatedDoctor = getTranslatedDoctor(originalAssignedDoctor, t);
   const translatedRadiologist = getTranslatedRadiologist(originalRadiologist, t);
   // Use new centralized pathology helper
-  const { getTranslatedPathology: getPathology } = require('@/utils/pathologyHelpers');
   const translatedPathology = getPathology(originalPathology);
 
   console.log('Translation debug - translated values:', {
