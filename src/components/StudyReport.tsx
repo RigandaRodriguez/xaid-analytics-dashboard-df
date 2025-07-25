@@ -26,8 +26,21 @@ const StudyReport = () => {
   console.log('StudyReport: Successfully got language context');
   const study = location.state?.study;
   
-  // State for description status
-  const [descriptionStatus, setDescriptionStatus] = React.useState(study?.descriptionStatus || 'in_progress');
+  // State for description status - auto-complete for error cases or empty pathologies
+  const shouldAutoComplete = study && (
+    study.status === 'processing_error' || 
+    study.status === 'data_error' ||
+    study.status === 'precondition_error' ||
+    study.status === 'configuration_error' ||
+    study.status === 'generation_error' ||
+    study.status === 'upload_error' ||
+    !study.pathology || 
+    (Array.isArray(study.pathology) && study.pathology.length === 0)
+  );
+  
+  const [descriptionStatus, setDescriptionStatus] = React.useState(
+    shouldAutoComplete ? 'completed' : (study?.descriptionStatus || 'in_progress')
+  );
 
   // API-based pathology management
   const pathologyManagement = usePathologyManagementApi(study?.uid || '');
