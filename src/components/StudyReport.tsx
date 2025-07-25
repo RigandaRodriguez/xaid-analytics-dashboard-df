@@ -86,13 +86,13 @@ const StudyReport = () => {
         </div>
 
         <div className="space-y-6">
-          {/* Error Banner */}
-          {isError && (
+          {/* Error Banner - Only show if not already shown via status */}
+          {isError && study.errorMessage && (
             <div className="bg-red-50 border border-red-200 rounded-lg p-4 flex items-start gap-3">
               <AlertCircle className="w-5 h-5 text-red-600 mt-0.5 flex-shrink-0" />
               <div>
                 <h3 className="text-red-800 font-medium">
-                  {t('studyReport.errorOccurred', { message: study.errorMessage || t('studyReport.unknownError') })}
+                  {t('studyReport.errorOccurred', { message: study.errorMessage })}
                 </h3>
                 <p className="text-red-700 text-sm mt-1">{t('studyReport.tryRetry')}</p>
               </div>
@@ -121,8 +121,8 @@ const StudyReport = () => {
 
           <StudyActionsCard
             study={study}
-            isAddedToReport={isAddedToReport}
-            onAddToReport={handleAddToReport}
+            isAddedToReport={isAddedToReport(study.uid)}
+            onAddToReport={() => handleAddToReport(study)}
             canConfirmDiagnosis={canConfirmDiagnosis}
             allPathologiesDecided={pathologyManagement.allPathologiesDecided}
             descriptionStatus={descriptionStatus}
