@@ -48,17 +48,6 @@ const BasicFiltersSection = ({ filters, onFilterChange, getLocale }: BasicFilter
           />
         </PopoverContent>
       </Popover>
-      <Select value={filters.status} onValueChange={(value) => onFilterChange('status', value)}>
-        <SelectTrigger>
-          <SelectValue placeholder={t('study.status')} />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="all">{t('statuses.all')}</SelectItem>
-          <SelectItem value="completed">{t('statuses.completed')}</SelectItem>
-          <SelectItem value="processing">{t('statuses.processing')}</SelectItem>
-          <SelectItem value="error">{t('statuses.error')}</SelectItem>
-        </SelectContent>
-      </Select>
     </>
   );
 };
