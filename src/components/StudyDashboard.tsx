@@ -3,7 +3,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import BulkActionsPanel from '@/components/BulkActionsPanel';
 import UndoPanel from '@/components/UndoPanel';
-import DisplaySettings from '@/components/DisplaySettings';
+
 import StudyPagination from '@/components/StudyPagination';
 import StatisticsGraph from '@/components/StatisticsGraph';
 import StudyFiltersCard from '@/components/StudyFiltersCard';
@@ -97,7 +97,7 @@ const StudyDashboard = ({ onAddToReport }: StudyDashboardProps) => {
     <div className="space-y-6 pb-20">
       <StatisticsGraph />
 
-      <div className="sticky top-0 z-30 bg-gray-50 pb-4">
+      <div className="sticky top-0 z-30 bg-gray-50 pb-4 pt-4 -mx-8 px-8">
         <StudyFiltersCard
           filters={filters}
           setFilters={setFilters}
@@ -108,18 +108,6 @@ const StudyDashboard = ({ onAddToReport }: StudyDashboardProps) => {
           onAddToReport={handleAddToReport}
         />
       </div>
-
-      <DisplaySettings
-        recordsPerPage={paginationConfig.recordsPerPage}
-        onRecordsPerPageChange={handleRecordsPerPageChange}
-        sortBy={sortConfig.sortBy}
-        sortDirection={sortConfig.sortDirection}
-        onSortChange={handleSortChange}
-        totalRecords={paginationData.currentPageStudies.length}
-        currentPage={paginationConfig.currentPage}
-        startRecord={paginationData.startRecord}
-        endRecord={paginationData.endRecord}
-      />
 
       {isLoading ? (
         <div className="flex justify-center items-center py-12">
