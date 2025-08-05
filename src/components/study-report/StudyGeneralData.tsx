@@ -75,6 +75,10 @@ const StudyGeneralData: React.FC<StudyGeneralDataProps> = ({
             <p className="font-mono">{study.uid}</p>
           </div>
           <div>
+            <label className="text-sm font-medium text-gray-500">Study instance uid</label>
+            <p className="font-mono">{study.studyInstanceUid || '—'}</p>
+          </div>
+          <div>
             <label className="text-sm font-medium text-gray-500">{t('study.patientId')}</label>
             <p className="font-mono">{study.patientId}</p>
           </div>
