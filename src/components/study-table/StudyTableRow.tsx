@@ -129,7 +129,7 @@ const StudyTableRow = ({
           onClick={() => onViewReport(study)}
           className="text-blue-600 hover:text-blue-800 hover:underline"
         >
-          {study.uid}
+          {study.studyInstanceUid || study.uid}
         </button>
       </td>
       <td className="p-4 font-mono text-sm">{study.patientId}</td>
