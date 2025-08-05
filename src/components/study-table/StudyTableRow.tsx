@@ -34,9 +34,7 @@ const StudyTableRow = ({
     
     if (allPathologiesRejected) {
       return (
-        <span className="inline-block bg-red-50 text-red-700 px-2 py-1 rounded-full text-xs">
-          {t('studyReport.pathologyStatuses.rejected')}
-        </span>
+        <span className="text-gray-500">—</span>
       );
     }
     
@@ -68,6 +66,16 @@ const StudyTableRow = ({
   };
 
   const getDescriptionStatusBadge = (study: Study) => {
+    // Check if all pathologies are rejected
+    const allPathologiesRejected = study.pathologyStates && 
+      Object.values(study.pathologyStates).every((state: any) => state.status === 'rejected');
+    
+    if (allPathologiesRejected) {
+      return (
+        <span className="text-gray-500">—</span>
+      );
+    }
+    
     // Check if study has processing errors or empty pathology
     const errorStatuses = ['processing_error', 'data_error', 'precondition_error', 'configuration_error', 'generation_error', 'upload_error'];
     const isError = errorStatuses.includes(study.status) || !study.pathology || study.pathology === '';
