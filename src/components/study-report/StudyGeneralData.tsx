@@ -90,18 +90,27 @@ const StudyGeneralData: React.FC<StudyGeneralDataProps> = ({
             <label className="text-sm font-medium text-gray-500">{t('study.status')}</label>
             <p>{getStatusBadge(study.status, t)}</p>
           </div>
-          <div>
-            <label className="text-sm font-medium text-gray-500">{t('study.descriptionStatus')}</label>
-            <p>
-              {isError ? (
-                <span className="text-green-600 font-medium">{t('study.descriptionCompleted')}</span>
-              ) : (descriptionStatus || study.descriptionStatus) === 'completed' ? (
-                <span className="text-green-600 font-medium">{t('study.descriptionCompleted')}</span>
-              ) : (
-                <span className="text-yellow-600 font-medium">{t('study.descriptionInProgress')}</span>
-              )}
-            </p>
-          </div>
+           <div>
+             <label className="text-sm font-medium text-gray-500">{t('study.descriptionStatus')}</label>
+             <p>
+               {(() => {
+                 // If study is still processing, show in progress
+                 if (study.status === 'processing') {
+                   return <span className="text-yellow-600 font-medium">{t('study.descriptionInProgress')}</span>;
+                 }
+                 
+                 if (isError) {
+                   return <span className="text-green-600 font-medium">{t('study.descriptionCompleted')}</span>;
+                 }
+                 
+                 return (descriptionStatus || study.descriptionStatus) === 'completed' ? (
+                   <span className="text-green-600 font-medium">{t('study.descriptionCompleted')}</span>
+                 ) : (
+                   <span className="text-yellow-600 font-medium">{t('study.descriptionInProgress')}</span>
+                 );
+               })()}
+             </p>
+           </div>
            <div>
              <label className="text-sm font-medium text-gray-500">{t('studyReport.finding')}</label>
              <div>
