@@ -28,13 +28,22 @@ const StudyTableRow = ({
   const { t, language } = useLanguage();
 
   const getTranslatedPathology = (study: Study) => {
+    // Show dash when status is processing
+    if (study.status === 'processing') {
+      return (
+        <span className="text-gray-500">—</span>
+      );
+    }
+    
     // Check if all pathologies are rejected
     const allPathologiesRejected = study.pathologyStates && 
       Object.values(study.pathologyStates).every((state: any) => state.status === 'rejected');
     
     if (allPathologiesRejected) {
       return (
-        <span className="text-gray-500">—</span>
+        <span className="inline-block bg-red-50 text-red-700 px-2 py-1 rounded-full text-xs">
+          {t('studyReport.pathologyStatuses.rejected')}
+        </span>
       );
     }
     
@@ -66,6 +75,13 @@ const StudyTableRow = ({
   };
 
   const getDescriptionStatusBadge = (study: Study) => {
+    // Show dash when status is processing
+    if (study.status === 'processing') {
+      return (
+        <span className="text-gray-500">—</span>
+      );
+    }
+    
     // Check if all pathologies are rejected
     const allPathologiesRejected = study.pathologyStates && 
       Object.values(study.pathologyStates).every((state: any) => state.status === 'rejected');
@@ -97,6 +113,13 @@ const StudyTableRow = ({
   };
 
   const getDoctorRecommendationsBadges = (recommendations?: string[], study?: Study) => {
+    // Show dash when status is processing
+    if (study?.status === 'processing') {
+      return (
+        <span className="text-gray-500">—</span>
+      );
+    }
+    
     // Check if all pathologies are rejected
     const allPathologiesRejected = study?.pathologyStates && 
       Object.values(study.pathologyStates).every((state: any) => state.status === 'rejected');
