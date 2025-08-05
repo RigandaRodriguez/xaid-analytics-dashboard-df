@@ -41,6 +41,7 @@ export default {
   errorStatus: 'завершилось с ошибкой',
   notApplicable: 'Не применимо',
   finding: 'Находка',
+  underReview: 'В рассмотрении',
   pathologyStatuses: {
     pending: 'Ожидает решения',
     accepted: 'Принят',

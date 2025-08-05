@@ -113,6 +113,9 @@ const StudyGeneralData: React.FC<StudyGeneralDataProps> = ({
                     study.pathology;
                 }
                 
+                // Check if any pathology has pending status (not yet reviewed)
+                const hasPendingPathologies = Object.values(pathologyStates).some((state: any) => state.status === 'pending');
+                
                 // Get only accepted pathologies with proper translations
                 const acceptedPathologies = Object.entries(pathologyStates)
                   .filter(([key, state]: [string, any]) => state.status === 'accepted')
@@ -129,8 +132,14 @@ const StudyGeneralData: React.FC<StudyGeneralDataProps> = ({
                   pathologyStates,
                   acceptedPathologies,
                   allPathologiesRejected,
+                  hasPendingPathologies,
                   studyPathology: study.pathology
                 });
+                
+                // If there are pending pathologies, show "Under review"
+                if (hasPendingPathologies) {
+                  return t('studyReport.underReview');
+                }
                 
                 if (allPathologiesRejected) {
                   return t('studyReport.pathologyStatuses.rejected');
@@ -140,7 +149,7 @@ const StudyGeneralData: React.FC<StudyGeneralDataProps> = ({
                   return acceptedPathologies.join(', ');
                 }
                 
-                return t('studyReport.pathologyStatuses.rejected');
+                return t('studyReport.underReview');
               })()}
             </div>
           </div>
