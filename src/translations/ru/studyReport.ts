@@ -63,5 +63,6 @@ export default {
     changesNotSaved: 'Изменения не сохранены'
   },
   descriptionCompleted: 'Описание завершено. Для редактирования нажмите "Внести изменения" в разделе действий.',
-  goToReports: 'Перейти в отчеты'
+  goToReports: 'Перейти в отчеты',
+  studyProcessing: 'Исследование в обработке'
 };

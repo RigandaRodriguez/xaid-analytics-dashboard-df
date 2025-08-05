@@ -152,7 +152,7 @@ const StudyTableRow = ({
       <td className="p-4 font-mono text-sm">
         <button
           onClick={() => onViewReport(study)}
-          className="text-blue-600 hover:text-blue-800 hover:underline"
+          className="text-blue-600 hover:text-blue-800 hover:underline break-all"
         >
           {study.studyInstanceUid || study.uid}
         </button>

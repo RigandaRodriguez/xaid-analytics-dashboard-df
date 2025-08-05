@@ -102,61 +102,75 @@ const StudyGeneralData: React.FC<StudyGeneralDataProps> = ({
               )}
             </p>
           </div>
-          <div>
-            <label className="text-sm font-medium text-gray-500">{t('studyReport.finding')}</label>
-            <div>
-              {(() => {
-                if (!pathologyStates) {
-                  // Fallback to original pathology if no states available
-                  return Array.isArray(study.pathology) ? 
-                    study.pathology.join(', ') : 
-                    study.pathology;
-                }
-                
-                // Check if any pathology has pending status (not yet reviewed)
-                const hasPendingPathologies = Object.values(pathologyStates).some((state: any) => state.status === 'pending');
-                
-                // Get only accepted pathologies with proper translations
-                const acceptedPathologies = Object.entries(pathologyStates)
-                  .filter(([key, state]: [string, any]) => state.status === 'accepted')
-                  .map(([key, state]: [string, any]) => {
-                    // Use centralized pathology registry
-                    const displayName = getPathologyDisplayName(key);
-                    console.log(`Translating ${key}: ${displayName}`);
-                    return displayName;
-                  });
-                
-                const allPathologiesRejected = Object.values(pathologyStates).every((state: any) => state.status === 'rejected');
-                
-                console.log('StudyGeneralData - finding section:', {
-                  pathologyStates,
-                  acceptedPathologies,
-                  allPathologiesRejected,
-                  hasPendingPathologies,
-                  studyPathology: study.pathology
-                });
-                
-                // If there are pending pathologies, show "Under review"
-                if (hasPendingPathologies) {
-                  return t('studyReport.underReview');
-                }
-                
-                if (allPathologiesRejected) {
-                  return t('studyReport.pathologyStatuses.rejected');
-                }
-                
-                if (acceptedPathologies.length > 0) {
-                  return acceptedPathologies.join(', ');
-                }
-                
-                return t('studyReport.underReview');
-              })()}
-            </div>
-          </div>
-          <div>
-            <label className="text-sm font-medium text-gray-500">{t('studyReport.diagnosisConfirmed')}</label>
-            <p>{getDiagnosisStatus()}</p>
-          </div>
+           <div>
+             <label className="text-sm font-medium text-gray-500">{t('studyReport.finding')}</label>
+             <div>
+               {(() => {
+                 // If study is still processing, show dash
+                 if (study.status === 'processing') {
+                   return <span className="text-gray-500">—</span>;
+                 }
+                 
+                 if (!pathologyStates) {
+                   // Fallback to original pathology if no states available
+                   return Array.isArray(study.pathology) ? 
+                     study.pathology.join(', ') : 
+                     study.pathology;
+                 }
+                 
+                 // Check if any pathology has pending status (not yet reviewed)
+                 const hasPendingPathologies = Object.values(pathologyStates).some((state: any) => state.status === 'pending');
+                 
+                 // Get only accepted pathologies with proper translations
+                 const acceptedPathologies = Object.entries(pathologyStates)
+                   .filter(([key, state]: [string, any]) => state.status === 'accepted')
+                   .map(([key, state]: [string, any]) => {
+                     // Use centralized pathology registry
+                     const displayName = getPathologyDisplayName(key);
+                     console.log(`Translating ${key}: ${displayName}`);
+                     return displayName;
+                   });
+                 
+                 const allPathologiesRejected = Object.values(pathologyStates).every((state: any) => state.status === 'rejected');
+                 
+                 console.log('StudyGeneralData - finding section:', {
+                   pathologyStates,
+                   acceptedPathologies,
+                   allPathologiesRejected,
+                   hasPendingPathologies,
+                   studyPathology: study.pathology
+                 });
+                 
+                 // If there are pending pathologies, show "Under review"
+                 if (hasPendingPathologies) {
+                   return t('studyReport.underReview');
+                 }
+                 
+                 if (allPathologiesRejected) {
+                   return t('studyReport.pathologyStatuses.rejected');
+                 }
+                 
+                 if (acceptedPathologies.length > 0) {
+                   return acceptedPathologies.join(', ');
+                 }
+                 
+                 return t('studyReport.underReview');
+               })()}
+             </div>
+           </div>
+           <div>
+             <label className="text-sm font-medium text-gray-500">{t('studyReport.diagnosisConfirmed')}</label>
+             <p>
+               {(() => {
+                 // If study is still processing, show special message
+                 if (study.status === 'processing') {
+                   return t('studyReport.studyProcessing');
+                 }
+                 
+                 return getDiagnosisStatus();
+               })()}
+             </p>
+           </div>
           <div>
             <label className="text-sm font-medium text-gray-500">{t('study.recommendations')}</label>
             <div className="flex flex-wrap gap-1 mt-1">
