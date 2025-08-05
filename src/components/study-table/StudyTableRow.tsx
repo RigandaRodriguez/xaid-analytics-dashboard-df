@@ -82,22 +82,16 @@ const StudyTableRow = ({
       );
     }
     
-    // Check if all pathologies are rejected
+    // Check if all pathologies are rejected - show as completed
     const allPathologiesRejected = study.pathologyStates && 
       Object.values(study.pathologyStates).every((state: any) => state.status === 'rejected');
-    
-    if (allPathologiesRejected) {
-      return (
-        <span className="text-gray-500">—</span>
-      );
-    }
     
     // Check if study has processing errors or empty pathology
     const errorStatuses = ['processing_error', 'data_error', 'precondition_error', 'configuration_error', 'generation_error', 'upload_error'];
     const isError = errorStatuses.includes(study.status) || !study.pathology || study.pathology === '';
     
-    // If error or no pathology, show as completed
-    const effectiveStatus = isError ? 'completed' : study.descriptionStatus;
+    // If error, no pathology, or all pathologies rejected, show as completed
+    const effectiveStatus = (isError || allPathologiesRejected) ? 'completed' : study.descriptionStatus;
     
     const statusMap = {
       'in_progress': { text: t('study.descriptionInProgress'), className: 'bg-yellow-100 text-yellow-800' },
