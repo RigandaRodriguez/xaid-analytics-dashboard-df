@@ -21,6 +21,7 @@ export function mapProcessingToStudy(processing: Processing, pathologies?: Proce
 
   return {
     uid: processing.uid,
+    studyInstanceUid: processing.study_instance_uid,
     patientId: processing.patient_id,
     patientName: processing.patient_name,
     date: new Date(processing.study_created_at),
