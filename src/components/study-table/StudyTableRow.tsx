@@ -75,10 +75,12 @@ const StudyTableRow = ({
   };
 
   const getDescriptionStatusBadge = (study: Study) => {
-    // Show dash when status is processing
+    // Show "In progress" when status is processing
     if (study.status === 'processing') {
       return (
-        <span className="text-gray-500">—</span>
+        <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium whitespace-nowrap bg-yellow-100 text-yellow-800">
+          {t('study.descriptionInProgress')}
+        </span>
       );
     }
     
