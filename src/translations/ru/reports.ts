@@ -72,6 +72,8 @@ export default {
     excelError: 'Ошибка при создании Excel отчета',
     noStudiesToExport: 'Нет исследований для экспорта',
     studyRemoved: 'Исследование удалено из отчета',
-    studiesRemoved: 'Удалено {count} исследований из отчета'
+    studiesRemoved: 'Удалено {count} исследований из отчета',
+    reportGenerated: 'Отчет успешно создан и загружен',
+    reportError: 'Ошибка при создании отчета'
   }
 };

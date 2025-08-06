@@ -87,10 +87,39 @@ export class ProcessingsService {
   }
 
   /**
-   * Generate processing transactions report
+   * Generate processing transactions report and download CSV file
    */
-  async generateReport(data: GenerateProcessingsReportRequest): Promise<any> {
-    return apiClient.post<any>('/processings/report', data);
+  async generateReport(data: GenerateProcessingsReportRequest): Promise<void> {
+    try {
+      const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
+      const response = await fetch(`${API_BASE_URL}/processings/report`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      // Get the blob data
+      const blob = await response.blob();
+      
+      // Create download link
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = 'processings_report.csv';
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error('Error generating report:', error);
+      throw error;
+    }
   }
 
   /**

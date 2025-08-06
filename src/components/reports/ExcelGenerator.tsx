@@ -3,7 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { FileSpreadsheet, Trash2 } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { useExcelGenerator } from '@/hooks/useExcelGenerator';
+import { useBackendReportGenerator } from '@/hooks/useBackendReportGenerator';
 
 interface ExcelGeneratorProps {
   selectedStudies: string[];
@@ -18,7 +18,7 @@ const ExcelGenerator = ({
 }: ExcelGeneratorProps) => {
   const { t } = useLanguage();
   
-  const { generateExcelReport } = useExcelGenerator({
+  const { generateReport } = useBackendReportGenerator({
     reportStudies
   });
 
@@ -38,7 +38,7 @@ const ExcelGenerator = ({
       <CardContent className="p-6">
         <div className="flex flex-wrap items-center gap-4">
           <Button
-            onClick={generateExcelReport}
+            onClick={generateReport}
             className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white shadow-lg hover:shadow-xl transition-all duration-200"
             size="lg"
           >
