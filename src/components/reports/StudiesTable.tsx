@@ -116,6 +116,7 @@ const StudiesTable = ({
                   />
                 </th>
                 <th className="text-left p-4 font-semibold text-gray-700">{t('reports.studiesTable.headers.uid')}</th>
+                <th className="text-left p-4 font-semibold text-gray-700">Study Instance UID</th>
                 <th className="text-left p-4 font-semibold text-gray-700">{t('reports.studiesTable.headers.patientId')}</th>
                 <th className="text-left p-4 font-semibold text-gray-700">{t('reports.studiesTable.headers.patientName')}</th>
                 <th className="text-left p-4 font-semibold text-gray-700">{t('reports.studiesTable.headers.dateTime')}</th>
@@ -143,6 +144,7 @@ const StudiesTable = ({
                       {study.uid}
                     </button>
                   </td>
+                  <td className="p-4 font-mono text-sm text-gray-700">{study.studyInstanceUid || '—'}</td>
                   <td className="p-4 font-mono text-sm text-gray-700">{study.patientId}</td>
                   <td className="p-4 text-sm font-medium">{study.patientName || 'Unknown Patient'}</td>
                   <td className="p-4 text-sm">
